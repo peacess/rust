@@ -1,4 +1,3 @@
-
 // Result Option panic match
 
 // 错误处理的过去与未来
@@ -14,7 +13,6 @@
 // 第四，再加一个粗暴处理（panic）
 //
 fn two_times_impl() -> impl Fn(i32) -> i32 {
-
     let i = 2;
     move |j| j * i
 }
@@ -27,31 +25,32 @@ fn OptionClone() {
 }
 
 #[test]
-fn test_map_and_then(){
-    let mut o:Option<i64> = Some(1);
-    o.and_then(|t|{
-        print!("{}",t);
+fn test_map_and_then() {
+    let mut o: Option<i64> = Some(1);
+    o.and_then(|t| {
+        print!("{}", t);
         let tt: Option<i32> = Some(1);
         tt
-    }).and_then(|t2|{
+    }).and_then(|t2| {
         print!("{}", t2);
         let tt: Option<i32> = None;
         tt
-    }).or_else(||{
+    }).or_else(|| {
         let tt: Option<i32> = None;
         tt
     });
     return;
 }
+
 #[test]
 fn test_match() {
-    let s:String = "".to_owned();
+    let s: String = "".to_owned();
 
     let i = 2;
     match i {
         _ if i < 2 => println!("i < 2"),
         // 0 .. 2 => println!("0..<2"),
-        2 ..= 3 => println!("2..=3"),
+        2..=3 => println!("2..=3"),
         0 | 1 => println!("0 | 1"),
         // _ => println!("default")
         _ => {}

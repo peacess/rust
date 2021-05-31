@@ -1,5 +1,3 @@
-
-
 macro_rules! macro_f {
     ($($field:expr),+) => {
         fn tt(){

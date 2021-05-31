@@ -13,6 +13,7 @@ fn create<F>(tt: F) where F: FnMut() {
     let f = caller::<F>;
     f();
 }
+
 #[test]
 fn test_run() {
     create(foo);//参数是一种类型， 对于 foo这种类型来说，不管这种类型的值是什么，都可以通过它来调用函数

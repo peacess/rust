@@ -6,7 +6,7 @@ edition = "2018"
 resover="2"
 
 [lib]
-name = "mylib"
+name = "rust"
 path = "src/lib.rs"
 
 [[bin]]

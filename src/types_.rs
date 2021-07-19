@@ -59,3 +59,4 @@ fn test_iter_mut_into() {
     let iter_mut = v.iter_mut();
     let into_iter = v.into_iter();
 }
+

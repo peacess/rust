@@ -4,6 +4,7 @@ use std::alloc::{alloc, Layout};
 use std::borrow::Cow;
 use std::ffi::CString;
 use std::ptr::null;
+use std::cell::RefCell;
 
 #[cfg(test)]
 mod test {
@@ -497,17 +498,64 @@ fn test_double_ref_raw() {
         t
     }
 
-    fn ok1_d_raw() -> *mut *mut i32 {
+    fn ok1_d_raw<T>() -> *mut *mut T {
         let t = Box::new(std::ptr::null_mut());
         Box::into_raw(t)
     }
-    fn ok2_d_raw() -> *mut *mut i32 {
-        let layout = std::alloc::Layout::new::<*mut *mut i32>();
-        let t = unsafe { std::alloc::alloc(layout) } as *mut *mut i32;
+    fn ok2_d_raw<T>() -> *mut *mut T {//可以正确工作，但为了统一free内存，不建议这种方式
+        let layout = std::alloc::Layout::new::<*mut *mut T>();
+        //注意分配内存时，一定注意是否需要 zeroed.
+        let t = unsafe { std::alloc::alloc_zeroed(layout) } as *mut *mut T;
         t
     }
-    let d1 = err_d_raw();
-    let d2 = ok1_d_raw();
-    let d3 = ok2_d_raw();
+
+    fn free_d_raw<T>(d: &mut *mut *mut T) {
+        if *d != std::ptr::null_mut() {
+            unsafe {
+                let f = &mut **d;//是两个*号，第一个对应的是 &mut
+                if *f != std::ptr::null_mut() {
+                    let _ = Box::from_raw(*f);
+                    *f = std::ptr::null_mut();
+                }
+                let _ = Box::from_raw(*d);
+                *d = std::ptr::null_mut();
+            }
+        }
+    }
+    let d1 = err_d_raw();//不要释放这个内存，它是stack，释放会产生未知错误
+    let mut d2 = ok1_d_raw::<i32>();
+    free_d_raw(&mut d2);
+    let mut d3 = ok2_d_raw::<i32>(); //由于使用的alloc直接分配的内存，最好使用dealloc来free内存，配对使用
+    free_d_raw(&mut d3);
+
+    let mut d4 = ok1_d_raw::<i32>();
+    unsafe { *d4 = Box::into_raw(Box::new(10)); }
+    free_d_raw(&mut d4);
+
+    assert_ne!(d1, std::ptr::null_mut());
+    assert_eq!(d2, std::ptr::null_mut());
+    assert_eq!(d3, std::ptr::null_mut());
+    assert_eq!(d4, std::ptr::null_mut());
+
     println!("err_d_raw d1: {:p}\nok1_d_raw d2: {:p}\nok2_d_raw d3: {:p}", d1, d2, d3);
+}
+
+
+#[test]
+fn test_auto_copy() {
+    #[derive(Debug)]
+    struct D {
+        a: i32,
+    }
+
+    let d = D{a:10};
+    let d2 = d;
+    // println!("{:?}", d);
+}
+
+#[test]
+fn test_ref_box(){
+    let t = RefCell::new(Box::new(Vec::new()));
+    t.borrow_mut().push(1);
+
 }

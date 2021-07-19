@@ -13,3 +13,4 @@ mod format_;
 mod enum_;
 pub mod doc_;
 mod closure_;
+mod copy_;

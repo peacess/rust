@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 // Result Option panic match
 
 // 错误处理的过去与未来
@@ -12,21 +13,10 @@
 // 第三，性能高（这是很多底层开发不使用C++的原因之一）
 // 第四，再加一个粗暴处理（panic）
 //
-fn two_times_impl() -> impl Fn(i32) -> i32 {
-    let i = 2;
-    move |j| j * i
-}
-
-fn OptionClone() {
-    let a = Some(1);
-    let b = a.clone();
-    let refa = Some(&1);
-    let refb = refa.copied();
-}
 
 #[test]
 fn test_map_and_then() {
-    let mut o: Option<i64> = Some(1);
+    let o: Option<i64> = Some(1);
     o.and_then(|t| {
         print!("{}", t);
         let tt: Option<i32> = Some(1);

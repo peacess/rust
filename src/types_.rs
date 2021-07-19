@@ -1,3 +1,5 @@
+#![allow(unused_variables)]
+
 #[test]
 fn test_char() {
     let chars = "é".chars().collect::<Vec<_>>();
@@ -8,17 +10,17 @@ fn test_char() {
     assert_eq!(vec!['\u{0065}', '\u{0301}'], chars2);
 }
 
+#[allow(dead_code)]
 #[test]
 fn test_use_as() {
     struct A {}
-    ;
     use A as VV;
     type V2 = A;
     impl V2 {
-        pub fn okok() {}
+        pub fn f2() {}
     }
     impl VV {
-        pub fn ok() {}
+        pub fn f1() {}
     }
 }
 
@@ -38,7 +40,22 @@ fn test_sized() {
     }
     let ts = Ts {};
     ts.f4();
-    let t: &T = &Ts {};
+    let t: &dyn T = &Ts {};
     t.f2();
     // t.f4();
+}
+
+#[test]
+fn test_as_into_to() {
+    let as_ = "sdf".as_bytes();
+    let into_ = "sdf".to_owned().into_bytes();
+    let to_ = "sdf".to_lowercase();
+}
+
+#[test]
+fn test_iter_mut_into() {
+    let mut v = vec![1, 2, 3];
+    let iter = v.iter();
+    let iter_mut = v.iter_mut();
+    let into_iter = v.into_iter();
 }

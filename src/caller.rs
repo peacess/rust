@@ -9,7 +9,7 @@ fn caller<F>() where F: FnMut() {
     closure();
 }
 
-fn create<F>(tt: F) where F: FnMut() {
+fn create<F>(_: F) where F: FnMut() {
     let f = caller::<F>;
     f();
 }

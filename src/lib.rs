@@ -6,3 +6,6 @@ mod macro_;
 mod errors_;
 mod sized_;
 mod thread_;
+mod format_;
+mod enum_;
+pub mod doc_;

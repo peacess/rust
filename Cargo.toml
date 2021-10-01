@@ -17,3 +17,4 @@ path = "src/main.rs"
 lazy_static = "1.4.0"
 once_cell = "*"
 static_init = "*"
+tokio = { version="1.12.0", features = ["full"] }

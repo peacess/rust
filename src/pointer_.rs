@@ -540,22 +540,58 @@ fn test_double_ref_raw() {
     println!("err_d_raw d1: {:p}\nok1_d_raw d2: {:p}\nok2_d_raw d3: {:p}", d1, d2, d3);
 }
 
-
 #[test]
-fn test_auto_copy() {
-    #[derive(Debug)]
-    struct D {
-        a: i32,
-    }
-
-    let d = D{a:10};
-    let d2 = d;
-    // println!("{:?}", d);
+fn test_ref_box() {
+    let t = RefCell::new(Box::new(Vec::new()));
+    t.borrow_mut().push(1);
 }
 
 #[test]
-fn test_ref_box(){
-    let t = RefCell::new(Box::new(Vec::new()));
-    t.borrow_mut().push(1);
+fn test_fn_parameter() {
 
+    fn cmp(x: i32, y: i32) -> bool { x > y }
+
+    pub struct Heap<T> {
+        vec: Vec<T>,
+        compare: fn(T, T) -> bool, //外部比较函数
+    }
+
+    impl<T: Copy> Heap<T> {
+        pub fn down(&mut self,
+                    index: usize) -> i32 {
+            let arr = &mut self.vec;
+            if arr.capacity() < index {
+                return -1;
+            }
+            let element = arr[index];
+            let mut curr = index;
+            let mut left = curr * 2 + 1;
+            let mut right = left + 1;
+            while left < arr.capacity() {
+                //选择左右孩子的最小值进行比较
+                let mut child = left;
+                if right < arr.capacity() && (self.compare)(arr[right], arr[left]) {
+                    child = right;
+                }
+                // 待选择的值比孩子大，则将孩子移到当前的槽
+                // if self.vec.cmp(element, arr[child]) <= 0 {
+                //     break;
+                // } else {
+                //     arr[curr] = arr[child];
+                //     // 往下迭代
+                //     curr = child;
+                //     left = curr * 2 + 1;
+                //     right = left + 1;
+                // }
+            }
+            arr[curr] = element;
+            0
+        }
+    }
+    let mut heap =Heap{vec:Vec::new(),compare:cmp};
+}
+
+#[test]
+fn test_zero_pointer(){
+    //https://rustcc.cn/article?id=17ae679f-01e3-48bc-840f-8304fd87220d
 }

@@ -1,5 +1,6 @@
 // #![feature(unboxed_closures)]
 // #![feature(fn_traits)]
+#![feature(test)]
 
 pub mod caller;
 pub mod r_static;
@@ -16,3 +17,4 @@ mod closure_;
 mod copy_;
 mod env_;
 mod spawn_async;
+mod block_on_;

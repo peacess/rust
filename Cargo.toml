@@ -18,3 +18,19 @@ lazy_static = "1.4.0"
 once_cell = "*"
 static_init = "*"
 tokio = { version="1.12.0", features = ["full"] }
+
+[dev-dependencies]
+
+#block_on
+futures = "*"
+async-std = "*"
+futures-lite = "*"
+tokio = { version="*", features = ["full"] }
+smol = "*"
+extreme="*"
+
+async-task="*"
+waker-fn ="*"
+pin-utils="*"
+crossbeam="*"
+#end block_on

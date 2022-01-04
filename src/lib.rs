@@ -18,3 +18,6 @@ mod copy_;
 mod env_;
 mod spawn_async;
 mod block_on_;
+mod async_;
+mod trait_;
+mod lang_;

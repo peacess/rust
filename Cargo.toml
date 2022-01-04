@@ -34,3 +34,5 @@ waker-fn ="*"
 pin-utils="*"
 crossbeam="*"
 #end block_on
+
+futures-io = "0.3.19"

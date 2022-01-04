@@ -372,9 +372,9 @@ dependencies = [
 
 [[package]]
 name = "futures-io"
-version = "0.3.17"
+version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "522de2a0fe3e380f1bc577ba0474108faf3f6b18321dbf60b3b9c39a75073377"
+checksum = "b1f9d34af5a1aac6fb380f735fe510746c38067c5bf16c7fd250280503c971b2"
 
 [[package]]
 name = "futures-lite"
@@ -683,6 +683,7 @@ dependencies = [
  "crossbeam",
  "extreme",
  "futures",
+ "futures-io",
  "futures-lite",
  "lazy_static",
  "once_cell",

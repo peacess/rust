@@ -21,3 +21,4 @@ mod block_on_;
 mod async_;
 mod trait_;
 mod lang_;
+mod panic_;

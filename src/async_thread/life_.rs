@@ -1,5 +1,6 @@
 
 /// see (异步下的生命周期问题)[https://rustcc.cn/article?id=a61c0207-65b5-4f5a-a123-34b553fe13fb]
+#[cfg(any(test))]
 mod test {
     use std::{pin::Pin, task::Poll};
     use futures_io::{AsyncBufRead, AsyncRead};

@@ -1,4 +1,5 @@
 /// (enum和struct下的生命周期问题)[https://rustcc.cn/article?id=a45f8532-4e48-4495-91b9-df56b6ce33de]
+#[cfg(any(test))]
 mod test {
     //不能通过编译
     enum Body {
@@ -23,7 +24,7 @@ mod test {
     //     }
     // }
 }
-
+#[cfg(any(test))]
 mod test2 {
     //能通过编译
     struct Body (Vec<u8>);

@@ -53,6 +53,7 @@ fn main(){
         let t = thread::spawn(move ||{
             barrier_clone.wait();
             let mut v = 0;
+            a_clone.fetch_add()
             while v < max_value -1 {
                 // fence(Ordering::SeqCst);
                 let b = b_clone.load(Ordering::Relaxed);

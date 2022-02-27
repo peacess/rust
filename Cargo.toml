@@ -18,6 +18,10 @@ name = "async_order"
 path = "src/async_thread/order_.rs"
 
 [[bin]]
+name = "trait"
+path = "src/trait_/trait_object_.rs"
+
+[[bin]]
 name = "demo_2022_0226"
 path = "src/demo_2022_0226/demo1.rs"
 

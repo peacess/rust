@@ -1,6 +1,21 @@
 
-#[test]
-fn test_trait_object() {
+#![feature(ptr_metadata)]
+
+use std::ptr;
+use std::ptr::{metadata, null, Pointee};
+/// 在sub trait object之间进行转换是可以的，但需要使用非安全代码，其中metadata(方法七，方法八)需要nightly
+/// 通过下面的测试可以有八种方法可以实现，建议使用方法为，定义一个转换的trait或单独在实现类中增加方法来进行完全转换，也就是方法一
+///
+/// 从unsafe实现中可以得出如下结果：
+/// 1. trait object是一个fat 指针，包含struct的地址，及一个trait 的metadata（主要内容为vtable）
+/// 2. any的typeid是在编译确定的，
+/// 3。trait object中没有存放struct的类型信息（如，字段等），所以不能通过"反射"来取到字段
+/// 4。不能通过trait object来取到struct的方法，只能取到trait的方法？（这一条还不是很确定，有进一步验证）
+///
+///
+
+// #[test]
+fn main() {
     use std::any::Any;
     use std::mem::transmute;
 
@@ -92,38 +107,54 @@ fn test_trait_object() {
         println!("方法六，通过unsafe代码实现 -- trait object --> any: parent2.parent()");
         parent2.parent();
     }
-    println!("下面是错误的实现，可以运行，结果不正确");
-    {
-        let parent2 = unsafe { transmute::<_, &dyn Parent>(sub) };
-        println!("错误的实现，通过unsafe代码实现 -- sub --> parent: parent2.parent()");
-        parent2.parent();//out "sub..."，通过parent2的方法直接调用到Sub的方法了，因为parent2的vtable是直接指向parent的
-
-        let sub2 = unsafe { transmute::<_, &dyn Sub>(parent) };
-        println!("错误的实现，通过unsafe代码实现 -- parent --> sub: sub2.sub()");
-        sub2.sub();//out "parent..."，通过sub2的方法直接调用到Parent的方法了，因为sub2的vtable是直接指向parent的
-
-        //以上代码的运行结果,跟Parent和Sub中的方法定义的先后顺序有关，
+    unsafe {//方法七，通过 metadata来， parent --> sub，此方法需要nightly版
+        let (data, parent_meta) = (parent as *const Parent).to_raw_parts();
+        let sub2 = ptr::from_raw_parts::<Sub>(data, (ptr::null::<MyStruct>() as *const Sub).to_raw_parts().1);
+        println!("方法七，通过 metadata来， parent --> sub，此方法需要nightly版");
+        (*sub2).sub();
     }
-    // {
-    //     let s:std::raw::TraitObject;
-    // }
+    unsafe {//方法八，通过 metadata来， sub --> parent，此方法需要nightly版
+        let (data, sub_meta) = (sub as *const Sub).to_raw_parts();
+        let parent2 = ptr::from_raw_parts::<Parent>(data, (ptr::null::<MyStruct>() as *const Parent).to_raw_parts().1);
+        println!("方法七，通过 metadata来， sub --> parent，此方法需要nightly版");
+        (*parent2).parent();
+    }
 
     //下面是TraitObject，与vtable的定义
-    #[allow(dead_code)]
-    pub struct TraitObject {
-        pub data: *mut (),
-        pub vtable: *mut (),
+    //这个对象在 1.53被取消取了， 但内存关系还是一样的
+    {
+        #[allow(dead_code)]//为了去掉编译的waring
+        pub struct TraitObject {
+            pub data: *mut (),
+            pub vtable: *mut (),
+        }
+        // see: https://github.com/rust-lang/rust/blob/b63d7e2b1c4019e40051036bcb1fd5f254a8f6e2/src/librustc_codegen_llvm/meth.rs#L64-L115
+        // see2: https://github.com/rust-lang/rust/blob/master/compiler/rustc_codegen_ssa/src/meth.rs, 中的get_vtable
+        // 这里的vtable只是按照它的内存布局来定义的，实际的实现是一个“Vec”
+        #[allow(dead_code)]//为了去掉编译的waring
+        struct Vtable {
+            destructor: fn(*mut ()),
+            size: usize,
+            align: usize,
+            method: [fn(*const ()) -> String; 2],//这里是trait的方法数组，
+            // “fn(*const ()) -> String”只是一例子，2也是
+        }
     }
-    // see: https://github.com/rust-lang/rust/blob/b63d7e2b1c4019e40051036bcb1fd5f254a8f6e2/src/librustc_codegen_llvm/meth.rs#L64-L115
-    // see2: https://github.com/rust-lang/rust/blob/master/compiler/rustc_codegen_ssa/src/meth.rs, 中的get_vtable
-    // 这里的vtable只是按照它的内存布局来定义的，实际的实现是一个“Vec”
-    #[allow(dead_code)]
-    struct Vtable {
-        destructor: fn(*mut ()),
-        size: usize,
-        align: usize,
-        method: [fn(*const ()) -> String; 2],//这里是trait的方法数组，
-        // “fn(*const ()) -> String”只是一例子，2也是
+
+    //新版的定义如下：
+    {
+        #[allow(dead_code)]//为了去掉编译的waring
+        pub(crate) struct PtrComponents<T: ?Sized> {
+            pub(crate) data_address: *const (),
+            pub(crate) metadata: <T as Pointee>::Metadata, //这里就是vtable
+        }
+        #[allow(dead_code)]//为了去掉编译的waring
+        struct VTable {
+            drop_in_place: fn(*mut ()),
+            size_of: usize,
+            align_of: usize,
+        }
     }
+
 }
 

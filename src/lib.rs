@@ -1,6 +1,7 @@
 // #![feature(unboxed_closures)]
 // #![feature(fn_traits)]
 // #![feature(test)]
+// #![feature(ptr_metadata)]
 
 pub mod caller;
 pub mod r_static;

@@ -53,7 +53,6 @@ fn main(){
         let t = thread::spawn(move ||{
             barrier_clone.wait();
             let mut v = 0;
-            a_clone.fetch_add()
             while v < max_value -1 {
                 // fence(Ordering::SeqCst);
                 let b = b_clone.load(Ordering::Relaxed);
@@ -137,26 +136,26 @@ mod test_relaxed {
 
     #[test]
     fn test_relaxed2() {
-        let NTHREADS: usize = num_cpus::get() - 2;
-        let NITERS: usize = 100000;
-        let upair = Arc::new(UsizePair::new(0));
+        let nthreads: usize = num_cpus::get() - 2;
+        let niters: usize = 100000;
+        let usize_pair = Arc::new(UsizePair::new(0));
 
         // Barrier is a counter-like synchronization structure (not to be confused
         // with a memory barrier). It blocks on a `wait` call until a fixed number
         // of `wait` calls are made from various threads (like waiting for all
         // players to get to the starting line before firing the starter pistol).
-        let barrier = Arc::new(Barrier::new(NTHREADS + 1));
+        let barrier = Arc::new(Barrier::new(nthreads + 1));
 
         let mut children = vec![];
 
-        for _ in 0..NTHREADS {
-            let upair = upair.clone();
+        for _ in 0..nthreads {
+            let upair = usize_pair.clone();
             let barrier = barrier.clone();
             children.push(thread::spawn(move || {
                 barrier.wait();
 
                 let mut v = 0;
-                while v < NITERS - 1 {
+                while v < niters - 1 {
                     // Read both members `atom` and `norm`, and check whether `atom`
                     // contains a newer value than `norm`. See `UsizePair` impl for
                     // details.
@@ -173,12 +172,58 @@ mod test_relaxed {
 
         barrier.wait();
 
-        for v in 1..NITERS {
-            upair.set(v);
+        for v in 1..niters {
+            usize_pair.set(v);
         }
 
         for child in children {
             let _ = child.join();
+        }
+    }
+}
+
+#[cfg(any(test))]
+mod test2{
+    /// [see](https://github.com/freepeace/code_styles/blob/master/atomic_volatile_order-cn.md)
+    use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, fence, Ordering};
+    use std::thread;
+
+    #[test]
+    fn test_atomic_volatile_order() {
+        let a = Arc::new(AtomicBool::new(false));
+        let b = Arc::new(AtomicBool::new(false));
+
+        for _ in 0..100 {
+            let a_clone = a.clone();
+            let b_clone = b.clone();
+            let t1 = thread::spawn(move || {
+                a_clone.store(true, Ordering::Relaxed);
+                fence(Ordering::Release);
+                b_clone.store(true, Ordering::Relaxed);
+            });
+
+            let a_clone = a.clone();
+            let b_clone = b.clone();
+            let t2 = thread::spawn(move || {
+                while !b_clone.load(Ordering::Relaxed){}
+                fence(Ordering::Acquire);
+                let a = a_clone.load(Ordering::Relaxed);
+                println!("a = {},b = true",a);
+            });
+
+            let a_clone = a.clone();
+            let b_clone = b.clone();
+            let t3 = thread::spawn(move || {
+                while !a_clone.load(Ordering::Relaxed){}
+                fence(Ordering::Acquire);
+                let b = b_clone.load(Ordering::Relaxed);
+                println!("a = true,b = {}",b);
+            });
+
+            let _ = t1.join();
+            let _ = t2.join();
+            let _ = t3.join();
         }
     }
 }

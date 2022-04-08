@@ -3,6 +3,10 @@
 
 use std::ptr;
 use std::ptr::{metadata, null, Pointee};
+
+const A: &str = "sdf";
+static B: &str = "sd";
+
 /// 在sub trait object之间进行转换是可以的，但需要使用非安全代码，其中metadata(方法七，方法八)需要nightly
 /// 通过下面的测试可以有八种方法可以实现，建议使用方法为，定义一个转换的trait或单独在实现类中增加方法来进行完全转换，也就是方法一
 ///
@@ -116,12 +120,12 @@ fn main() {
     unsafe {//方法八，通过 metadata来， sub --> parent，此方法需要nightly版
         let (data, sub_meta) = (sub as *const Sub).to_raw_parts();
         let parent2 = ptr::from_raw_parts::<Parent>(data, (ptr::null::<MyStruct>() as *const Parent).to_raw_parts().1);
-        println!("方法七，通过 metadata来， sub --> parent，此方法需要nightly版");
+        println!("方法八，通过 metadata来， sub --> parent，此方法需要nightly版");
         (*parent2).parent();
     }
 
     //下面是TraitObject，与vtable的定义
-    //这个对象在 1.53被取消取了， 但内存关系还是一样的
+    //这个对象在 1.53被删除， 但内存关系还是一样的
     {
         #[allow(dead_code)]//为了去掉编译的waring
         pub struct TraitObject {

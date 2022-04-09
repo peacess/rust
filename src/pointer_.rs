@@ -6,6 +6,8 @@ use std::borrow::Cow;
 use std::ffi::CString;
 use std::ptr::null;
 use std::cell::RefCell;
+use std::mem;
+use std::mem::MaybeUninit;
 
 #[cfg(test)]
 mod test {
@@ -470,4 +472,51 @@ fn test_fn_parameter() {
 #[test]
 fn test_zero_pointer(){
     //https://rustcc.cn/article?id=17ae679f-01e3-48bc-840f-8304fd87220d
+}
+
+/// 有七种方式可以分配 array（不包含 libc库的方式）
+/// * std::alloc::alloc性能最好 <  Vec::with_capacity(没有初始化，没有stack) < Box::new (有stack，好像编译器会优化) < Vec::from
+/// * MaybeUninit方式分配的内存在stack中，小心它的使用范围
+/// * let v: Box<[i32;64]> = unsafe { MaybeUninit::uninit().assume_init() }; //只分配Box，其中的[i32; 64]并没有分配
+#[test]
+fn test_alloc_array(){
+    //
+    let mut v = Vec::from([0;64]);
+    let p = v.as_mut_ptr();
+    core::mem::forget(v);
+    println!("Vec::from([0;64]): {:p}", p);
+
+    let mut v = Vec::<i32>::with_capacity(64);
+    unsafe {v.set_len(64);}
+    let p = v.as_mut_ptr();
+    core::mem::forget(v);
+    println!("Vec::<i32>::with_capacity(: {:p}", p);
+
+    //
+    let v = Box::new([0;64]);
+    let p = Box::into_raw(v);
+    println!("Box::new: {:p}", p);
+
+    //
+    let layout = Layout::new::<[i32;64]>();
+    let p = unsafe { std::alloc::alloc(layout) };//std::alloc::alloc_zeroed
+    println!("std::alloc::alloc: {:p}", p);
+
+    // 这里只是初始Box，而[i32;64]没有值
+    let v: Box<[i32;64]> = unsafe { MaybeUninit::uninit().assume_init() };//MaybeUninit::zeroed()
+    let p = Box::into_raw(v);
+    println!("MaybeUninit::uninit().assume_init() for Box<[i32;64]>: {:p}", p);
+
+    // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
+    let mut v: [i32;64] = unsafe { MaybeUninit::uninit().assume_init() };
+    let p = v.as_mut_ptr();
+    mem::forget(v);
+    println!("MaybeUninit::uninit().assume_init() for [i32;64]: {:p}", p);
+
+    // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
+    let mut v: [i32;64] = unsafe { mem::zeroed() };// same MaybeUninit::zeroed().assume_init()
+    let p = v.as_mut_ptr();
+    mem::forget(v);
+    println!("mem::zeroed(): {:p}", p);
+
 }

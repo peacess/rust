@@ -471,36 +471,37 @@ fn test_fn_parameter() {
 
 #[test]
 fn test_zero_pointer(){
-    //https://rustcc.cn/article?id=17ae679f-01e3-48bc-840f-8304fd87220d
+    /// [rust ffi 判断 c 零指针奇怪的输出](https://rustcc.cn/article?id=17ae679f-01e3-48bc-840f-8304fd87220d)
 }
-
-/// 有七种方式可以分配 array（不包含 libc库的方式）
-/// * std::alloc::alloc性能最好 <  Vec::with_capacity(没有初始化，没有stack) < Box::new (有stack，好像编译器会优化) < Vec::from
+/// 有七种方式可以分配 array
+/// * libc < std::alloc::alloc <  Vec::with_capacity(没有初始化，没有stack) < Box::new (有stack，好像编译器会优化) < Vec::from
+/// * 推荐使用 Box::new来分配，更合rust，如果想要性能可以使用libc，也可以使用std::alloc::alloc，不过它需要layout对象，使用有点不方便
 /// * MaybeUninit方式分配的内存在stack中，小心它的使用范围
 /// * let v: Box<[i32;64]> = unsafe { MaybeUninit::uninit().assume_init() }; //只分配Box，其中的[i32; 64]并没有分配
 #[test]
 fn test_alloc_array(){
-    //
+    //先要生成stack的[0;64]并初始化为零，再分配空间
     let mut v = Vec::from([0;64]);
     let p = v.as_mut_ptr();
     core::mem::forget(v);
     println!("Vec::from([0;64]): {:p}", p);
+    unsafe { Vec::from_raw_parts(p, 64, 64); }
 
+
+    //分配head的[0;64]，使用unsafe设置大小，最终分配内存还是会调用std::alloc::alloc
     let mut v = Vec::<i32>::with_capacity(64);
     unsafe {v.set_len(64);}
     let p = v.as_mut_ptr();
     core::mem::forget(v);
     println!("Vec::<i32>::with_capacity(: {:p}", p);
+    unsafe { Vec::from_raw_parts(p, 64, 64); }
 
     //
     let v = Box::new([0;64]);
-    let p = Box::into_raw(v);
+    let mut p = Box::into_raw(v);
+    let p = unsafe { (*p).as_mut_ptr() };
     println!("Box::new: {:p}", p);
-
-    //
-    let layout = Layout::new::<[i32;64]>();
-    let p = unsafe { std::alloc::alloc(layout) };//std::alloc::alloc_zeroed
-    println!("std::alloc::alloc: {:p}", p);
+    unsafe { Box::from_raw(p); }
 
     // 这里只是初始Box，而[i32;64]没有值
     let v: Box<[i32;64]> = unsafe { MaybeUninit::uninit().assume_init() };//MaybeUninit::zeroed()
@@ -512,11 +513,33 @@ fn test_alloc_array(){
     let p = v.as_mut_ptr();
     mem::forget(v);
     println!("MaybeUninit::uninit().assume_init() for [i32;64]: {:p}", p);
+    //这里不能释放内存，因为v在stack上
 
     // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
     let mut v: [i32;64] = unsafe { mem::zeroed() };// same MaybeUninit::zeroed().assume_init()
     let p = v.as_mut_ptr();
     mem::forget(v);
     println!("mem::zeroed(): {:p}", p);
+    //这里不能释放内存，因为v在stack上
+
+    //
+    let layout = Layout::new::<[i32;64]>();
+    let p = unsafe { std::alloc::alloc(layout) };//std::alloc::alloc_zeroed
+    println!("std::alloc::alloc: {:p}", p);
+    unsafe { std::alloc::dealloc(p, layout); }
+
+    //
+    let mut p = unsafe { libc::malloc(mem::size_of::<i32>() * 64) } as *mut i32;
+    if p.is_null(){
+        println!("libc malloc is null");
+    }else{
+        println!("std::alloc::alloc: {:p}", p);
+        unsafe { libc::free(p as *mut libc::c_void); }
+    }
+
+
+
+
+
 
 }

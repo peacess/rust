@@ -3,7 +3,7 @@ name = "rust"
 version = "0.1.0"
 authors = ["Peacess <peacess@163.com>"]
 edition = "2018"
-resover="2"
+resover = "2"
 
 [lib]
 name = "rust"
@@ -29,7 +29,7 @@ path = "src/demo_2022_0226/demo1.rs"
 lazy_static = "1.4.0"
 once_cell = "*"
 static_init = "*"
-tokio = { version="1.12.0", features = ["full"] }
+tokio = { version = "1.12.0", features = ["full"] }
 num_cpus = "1.13.1"
 libc = "0.2.122"
 
@@ -39,14 +39,14 @@ libc = "0.2.122"
 futures = "*"
 async-std = "*"
 futures-lite = "*"
-tokio = { version="*", features = ["full"] }
+tokio = { version = "*", features = ["full"] }
 smol = "*"
-extreme="*"
+extreme = "*"
 
-async-task="*"
-waker-fn ="*"
-pin-utils="*"
-crossbeam="*"
+async-task = "*"
+waker-fn = "*"
+pin-utils = "*"
+crossbeam = "*"
 #end block_on
 
 futures-io = "0.3.19"

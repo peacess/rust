@@ -53,15 +53,23 @@ mod async_in_trait {
 //使用#[async_trait]是一个方法，这里不再举例，详细见 #[async_trait]自己的说明
 
     trait AsyncTrait {
-        fn f1(&mut self) -> Pin<Box<dyn Future<Output=i32> + Send + '_>>;
+        fn f1<'a>(&mut self) -> Pin<Box<dyn Future<Output=i32> + Send + '_>>;
     }
 
-    impl AsyncTrait for i32 {
-        fn f1(&mut self) -> Pin<Box<dyn Future<Output=i32> + Send + '_>> {
-            async fn run(_self: &mut i32) -> i32 {
-                println!("call run");
-                *_self
-            }//疑问？ run是async函数， 而self是引用，这里为什么没有 lifetime问题
+
+    impl AsyncTrait for String {
+        fn f1<'a>(&'a mut self) -> Pin<Box<dyn Future<Output=i32> + Send + 'a>> {
+            // async fn run<'a >(_self: &'a mut String) -> i32 {
+            //     println!("call run {}", _self);
+            //     0
+            // }//疑问？ run是async函数， 而self是引用，这里为什么没有 lifetime问题
+            //因为返回值中包含self的引用，那么函数的返回与self的lifetime是一样的，这个与返回struct中字段的引用是一样的
+            //但是closure这样做时，需要给出明确的lifetime参数
+
+            let run = |_self: &'a mut String| async move {
+                println!("call run {}", _self);
+                0
+            };
             let fu = Box::pin(run(self));
             println!("after Box::pin");
             fu
@@ -69,28 +77,30 @@ mod async_in_trait {
     }
 
     trait AsyncTrait2 {
-        fn f1(&self) -> BoxFuture<'_, i32>;
+        fn f1<'a>(&'a self) -> BoxFuture<'a, i32>;
     }
 
     impl AsyncTrait2 for i32 {
-        fn f1(&self) -> BoxFuture<'_, i32> {
-            let f = |_self: &i32| {
-                let t = *_self;
-                async move {
-                    t
-                }
+        fn f1<'a>(&'a self) -> BoxFuture<'a, i32> {
+            let f = |_self: &'a i32| async move {
+                *_self
             };
-            f(self).boxed()
-            // Box::pin(f(self)) //这个与上面的是一样的效果
+            // f(self).boxed()
+            Box::pin(f(self)) //这个与上面的是一样的效果
         }
     }
 
     #[test]
     fn test_t1() {
-        let mut data = 0i32;
+        {
+            let mut data = "hi".to_owned();
+            block_on(data.f1());
+        }
 
-        block_on(AsyncTrait::f1(&mut data));
-        block_on(AsyncTrait2::f1(&data));
+        {
+            let mut data = 0i32;
+            block_on(AsyncTrait2::f1(&data));
+        }
         println!("");
     }
 }

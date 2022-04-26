@@ -1,4 +1,3 @@
-
 #[test]
 fn test_assign() {
     {
@@ -29,18 +28,18 @@ fn test_assign() {
         let v2 = v;
         println!("&v2:      {:p}", &v2);
         let ref ref_v2 = v2;
-        println!("ref_v2:   {:p}",ref_v2);
-        println!("&ref_v2:  {:p}",&ref_v2);
+        println!("ref_v2:   {:p}", ref_v2);
+        println!("&ref_v2:  {:p}", &ref_v2);
         let ref ref2_v2 = v2;
-        println!("ref2_v2:  {:p}",ref2_v2);
-        println!("&ref2_v2: {:p}",&ref2_v2);
+        println!("ref2_v2:  {:p}", ref2_v2);
+        println!("&ref2_v2: {:p}", &ref2_v2);
 
         let ref3_v2 = &v2;
-        println!("ref3_v2:  {:p}",ref3_v2);
-        println!("&ref3_v2: {:p}",&ref3_v2);
+        println!("ref3_v2:  {:p}", ref3_v2);
+        println!("&ref3_v2: {:p}", &ref3_v2);
         let ref4_v2 = &v2;
-        println!("ref4_v2:  {:p}",ref4_v2);
-        println!("&ref4_v2: {:p}",&ref4_v2);
+        println!("ref4_v2:  {:p}", ref4_v2);
+        println!("&ref4_v2: {:p}", &ref4_v2);
 
         //其中一次输出
         // &v:       0xc63afef38
@@ -53,6 +52,5 @@ fn test_assign() {
         // &ref3_v2: 0xc63aff150
         // ref4_v2:  0xc63afefa0
         // &ref4_v2: 0xc63aff1f0
-
     }
 }

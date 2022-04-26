@@ -1,4 +1,3 @@
-
 #![feature(ptr_metadata)]
 
 use std::ptr;
@@ -159,6 +158,5 @@ fn main() {
             align_of: usize,
         }
     }
-
 }
 

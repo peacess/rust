@@ -1,7 +1,5 @@
-
-
 #[test]
-fn test_env_path(){
+fn test_env_path() {
     let ex_path = std::env::current_exe().expect("exe path");
     println!("{}", ex_path.to_str().expect(""));
     let ex_path = ex_path.parent().expect("execute path");

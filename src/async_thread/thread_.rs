@@ -1,6 +1,8 @@
 #![allow(unused_variables)]
 
+use std::borrow::BorrowMut;
 use std::cell::Cell;
+use std::collections::BTreeMap;
 use std::sync::{Arc, Mutex, Once};
 use std::thread::spawn;
 
@@ -147,4 +149,27 @@ fn test_arc() {
     });
     // *md = 9;
     // t1.join();
+}
+
+#[test]
+fn test_arc_map() {
+    struct Handles {
+        maps: BTreeMap<i32, String>,
+    }
+    let mut arc = Arc::new(Handles {
+        maps: BTreeMap::new(),
+    });
+    Arc::get_mut(&mut arc).expect("").maps.insert(0, "0".to_owned());
+
+    let mut vec = Vec::new();
+    for i in 0..10 {
+        let clone = arc.clone();
+        let j = std::thread::spawn(move || {
+            let v = clone.maps.get(&0);
+        });
+        vec.push(j);
+    }
+    for it in vec {
+        it.join().expect("");
+    }
 }

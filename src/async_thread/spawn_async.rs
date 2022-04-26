@@ -1,4 +1,3 @@
-
 /// # 为什么在spawn中不能使用std::sync::Mutex
 /// [See tokio::spawn](https://tokio.rs/tokio/tutorial/spawning)
 
@@ -45,26 +44,27 @@
 
 /// //方法1 需要一个可以Send的“MutexGuard”
 /// //把std::sync::Mutex换成tokio::Mutex
-fn sample_error1_method1(){
+fn sample_error1_method1() {
     let mutex = tokio::sync::Mutex::<i32>::new(0);
     tokio::spawn(async move {
         let v = mutex.lock().await;
-        async{}.await;
+        async {}.await;
         println!("{}", "");
     });
 }
 
 /// //方法1 不要让变量v可能在await之后被使用
-fn sample_error1_method2(){
+fn sample_error1_method2() {
     let mutex = std::sync::Mutex::<i32>::new(0);
     tokio::spawn(async move {
         {
             let v = mutex.lock().expect("");
         }
-        async{}.await;
+        async {}.await;
         println!("{}", "");
     });
 }
+
 /// tokio::sync::Mutex的实现为解决std::sync::Mutex的问题做了，更多的工作，所以在使用时，能用std::sync::Mutex解决问题，就不要换了
 
 /// 疑问2 编译器async{}怎么知道是否为Send呢？
@@ -72,7 +72,5 @@ fn sample_error1_method2(){
 
 /// 最后一定要看编译器的提示，这是最高效的解决方法
 
-fn sample(){
-
-}
+fn sample() {}
 

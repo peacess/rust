@@ -4,11 +4,11 @@ use std::panic;
 /// set_hook vs catch_unwind
 #[test]
 fn test_panic_unwind() {
-    let result = panic::catch_unwind(||{
+    let result = panic::catch_unwind(|| {
         println!("in catch_unwind");
     });
 
-    let t:Option<i32> = None;
+    let t: Option<i32> = None;
     t.unwrap();
 
     if let Err(err) = result {
@@ -17,7 +17,7 @@ fn test_panic_unwind() {
 }
 
 #[test]
-fn test_panic(){
+fn test_panic() {
     let result = panic::catch_unwind(|| {
         println!("hello!");
     });

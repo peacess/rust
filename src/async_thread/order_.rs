@@ -37,8 +37,8 @@ fn test_relaxed() {
 
 // #[test]
 // fn test_relaxed_wait() {
-fn main(){
-    let thread_num = num_cpus::get() -2;
+fn main() {
+    let thread_num = num_cpus::get() - 2;
     let max_value = 10000;
     let a = Arc::new(AtomicUsize::new(0));
     let b = Arc::new(AtomicUsize::new(0));
@@ -50,10 +50,10 @@ fn main(){
         let a_clone = a.clone();
         let b_clone = b.clone();
         let barrier_clone = barrier.clone();
-        let t = thread::spawn(move ||{
+        let t = thread::spawn(move || {
             barrier_clone.wait();
             let mut v = 0;
-            while v < max_value -1 {
+            while v < max_value - 1 {
                 // fence(Ordering::SeqCst);
                 let b = b_clone.load(Ordering::Relaxed);
                 let a = a_clone.load(Ordering::Relaxed);
@@ -70,22 +70,21 @@ fn main(){
     barrier.wait();
     for i in 0..max_value {
         // fence(Ordering::SeqCst);
-        a.store(i,Ordering::Relaxed);
+        a.store(i, Ordering::Relaxed);
         b.store(i, Ordering::Relaxed);
     }
 
     for t in threads {
-        let _= t.join();
+        let _ = t.join();
     }
-
 }
 
 /// [see](https://riptutorial.com/rust/example/21259/atomics-and-memory-ordering)
 #[cfg(any(test))]
 mod test_relaxed {
     use std::cell::UnsafeCell;
-    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Barrier};
+    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::thread;
 
     struct UsizePair {
@@ -183,7 +182,7 @@ mod test_relaxed {
 }
 
 #[cfg(any(test))]
-mod test2{
+mod test2 {
     /// [see](https://github.com/freepeace/code_styles/blob/master/atomic_volatile_order-cn.md)
     use std::sync::Arc;
     use std::sync::atomic::{AtomicBool, fence, Ordering};
@@ -206,19 +205,19 @@ mod test2{
             let a_clone = a.clone();
             let b_clone = b.clone();
             let t2 = thread::spawn(move || {
-                while !b_clone.load(Ordering::Relaxed){}
+                while !b_clone.load(Ordering::Relaxed) {}
                 fence(Ordering::Acquire);
                 let a = a_clone.load(Ordering::Relaxed);
-                println!("a = {},b = true",a);
+                println!("a = {},b = true", a);
             });
 
             let a_clone = a.clone();
             let b_clone = b.clone();
             let t3 = thread::spawn(move || {
-                while !a_clone.load(Ordering::Relaxed){}
+                while !a_clone.load(Ordering::Relaxed) {}
                 fence(Ordering::Acquire);
                 let b = b_clone.load(Ordering::Relaxed);
-                println!("a = true,b = {}",b);
+                println!("a = true,b = {}", b);
             });
 
             let _ = t1.join();

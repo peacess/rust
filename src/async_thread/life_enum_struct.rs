@@ -24,10 +24,11 @@ mod test {
     //     }
     // }
 }
+
 #[cfg(any(test))]
 mod test2 {
     //能通过编译
-    struct Body (Vec<u8>);
+    struct Body(Vec<u8>);
 
 
     impl std::io::Read for Body {
@@ -39,7 +40,6 @@ mod test2 {
     impl std::io::BufRead for Body {
         fn fill_buf(&mut self) -> futures_io::Result<&[u8]> {
             Ok(self.0.as_ref())
-
         }
 
         fn consume(&mut self, amt: usize) {

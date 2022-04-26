@@ -38,7 +38,9 @@ fn test_copy_custom() {
     }
     impl Copy for Point {}
 
-    let t = Point { x: 1, y: 2,
+    let t = Point {
+        x: 1,
+        y: 2,
         // name:"name".to_owned()
     };
     let mut t2 = t;
@@ -54,7 +56,7 @@ fn test_auto_copy() {
         a: i32,
     }
 
-    let d = D{a:10};
+    let d = D { a: 10 };
     let d2 = d;
     // println!("{:?}", d);
 }

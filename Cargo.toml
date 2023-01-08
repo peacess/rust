@@ -50,3 +50,6 @@ crossbeam = "*"
 #end block_on
 
 futures-io = "0.3.19"
+
+[workspace]
+members = ["rust_kits"]

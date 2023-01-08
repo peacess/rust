@@ -37,9 +37,13 @@ impl<T> AtomicT<T> {
     }
 
     #[inline]
-    pub fn load(&self, order: Ordering) -> Arc<T> {
+    pub fn load(&self, order: Ordering) -> Option<Arc<T>> {
         let temp = self.0.load(order);
-        unsafe { (*temp).clone() }
+        if temp.is_null() {
+            return None;
+        }else{
+            return Some(unsafe { (*temp).clone() })
+        }
     }
 
     #[inline]
@@ -52,10 +56,15 @@ impl<T> AtomicT<T> {
     }
 
     #[inline]
-    pub fn swap(&self, data: Arc<T>, order: Ordering) -> Arc<T> {
+    pub fn swap(&self, data: Arc<T>, order: Ordering) -> Option<Arc<T>> {
         let ptr_data = Box::into_raw(Box::new(data));
         let temp = self.0.swap(ptr_data, order);
-        unsafe { Box::from_raw(temp) }.as_ref().clone()
+        if temp.is_null() {
+            return None;
+        }else{
+            let t = unsafe {Box::from_raw(temp)};
+            return Some(t.as_ref().clone());
+        }
     }
 }
 
@@ -95,14 +104,14 @@ mod tests {
         }
         {// 各种操作是否有内存问题
             let p = AtomicT::new(1);
-            let value_load = p.load(Ordering::SeqCst);
+            let value_load = p.load(Ordering::SeqCst).expect("");
             assert_eq!(1, *value_load.as_ref());
             p.replace(Arc::new(2), Ordering::SeqCst);
-            let value_load = p.load(Ordering::SeqCst);
+            let value_load = p.load(Ordering::SeqCst).expect("");
             assert_eq!(2, *value_load.as_ref());
-            let value_swap = p.swap(Arc::new(3), Ordering::SeqCst);
+            let value_swap = p.swap(Arc::new(3), Ordering::SeqCst).expect("");
             assert_eq!(2, *value_swap.as_ref());
-            let value_load = p.load(Ordering::SeqCst);
+            let value_load = p.load(Ordering::SeqCst).expect("");
             assert_eq!(3, *value_load.as_ref());
         }
     }

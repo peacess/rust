@@ -16,7 +16,7 @@ pub struct AtomicT<T>(AtomicPtr<Arc<T>>);
 
 impl<T> Drop for AtomicT<T> {
     fn drop(&mut self) {
-        //对象本身在释放时，释放自己管理的指针
+        //对象本身释放时，释放自己管理的指针
         let data = self.0.swap(ptr::null_mut(), Ordering::SeqCst);
         if !data.is_null() {
             unsafe {
@@ -83,7 +83,7 @@ mod tests {
     use std::sync::Arc;
     use std::sync::atomic::Ordering;
 
-    use crate::syncx::{AtomicT};
+    use crate::syncx::AtomicT;
 
     /// 在Cargo.toml目录下，运行　“cargo valgrind test --color=always --lib syncx::atomic_t::tests::drop_self_test”，测试程序是否有内存问题
     /// 注：　如果没有安装　valgrind 需要先运行：　cargo install cargo-valgrind

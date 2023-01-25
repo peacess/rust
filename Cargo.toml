@@ -32,6 +32,9 @@ static_init = "*"
 tokio = { version = "1.12.0", features = ["full"] }
 num_cpus = "1.13.1"
 libc = "0.2.122"
+cargo-valgrind = "2.1.0"
+
+futures = "*"
 
 [dev-dependencies]
 

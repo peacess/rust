@@ -6,7 +6,7 @@ use std::borrow::Cow;
 use std::cell::RefCell;
 use std::ffi::CString;
 use std::mem;
-use std::mem::MaybeUninit;
+use std::mem::{ManuallyDrop, MaybeUninit};
 use std::ptr::null;
 
 #[cfg(test)]
@@ -537,3 +537,25 @@ fn test_alloc_array() {
         unsafe { libc::free(p as *mut libc::c_void); }
     }
 }
+
+
+// 运行valgrind测试 cargo valgrind test --lib pointer_::test_vac_from_into_raw
+//
+#[test]
+fn test_vac_from_into_raw() {
+    for i in 0..100 {
+        let mut v = Vec::<i32>::with_capacity(100);
+        let (p, l, c) = {
+            //由于 Vec 的 into_raw_parts方法，是unstable, 所以这里是直接实现
+            let mut me = ManuallyDrop::new(v);
+            (me.as_mut_ptr(), me.len(), me.capacity())
+            // me这个对象，是手动释放内存， 但是程序并没有明确的释放内存，为什么没有内存泄漏
+            // Vec这个对象本身（不含字段），没有使用内存分配函数（alloc），那么它就不会有内存泄漏的问题。它本身分配在stack上，在函数退出后，自然会释放。
+            // 1，拥有一个对象（me拥有对象v），是编译器检查
+            // 2，ManuallyDrop只是说明不调用drop函数
+        };
+
+        unsafe { let _ = Vec::from_raw_parts(p, l, c); }
+    }
+}
+

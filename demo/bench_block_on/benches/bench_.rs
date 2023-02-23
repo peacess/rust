@@ -52,6 +52,7 @@ fn block_on<F: Future>(future: F) -> F::Output {
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
+    let mut c = c.benchmark_group("compare: ");
     const TIMES: i32 = 2;
     let tokio_ = tokio::runtime::Runtime::new().expect("");
     c.bench_function("tokio", |b| b.iter(|| {
@@ -75,6 +76,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("extreme", |b| b.iter(|| {
         extreme::run(SampleFuture(TIMES));
     }));
+    c.finish()
 }
 
 criterion_group!(benches, criterion_benchmark);

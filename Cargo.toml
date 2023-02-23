@@ -55,4 +55,4 @@ crossbeam = "*"
 futures-io = "0.3.19"
 
 [workspace]
-members = ["rust_kits","demo/bench_block_on"]
+members = ["rust_kits","demo/bench_block_on","demo/fn_gen_trait_closure"]

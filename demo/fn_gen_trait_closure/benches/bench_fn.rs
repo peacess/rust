@@ -74,6 +74,14 @@ fn criterion_benchmark(c: &mut Criterion) {
     c.bench_function("generics", |b| b.iter(|| {
         re = p_sum(&data);
     }));
+
+    c.bench_function("no fn", |b| b.iter(|| {
+        let mut re = i64::default();
+        for i in 0..data.len() {
+            re += data[i];
+        }
+        re
+    }));
     c.finish();
 }
 

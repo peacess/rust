@@ -1,7 +1,9 @@
-#![feature(ptr_metadata)]
+#![cfg_attr(feature = "unstable", feature(ptr_metadata))]
 
 use std::ptr;
-use std::ptr::{metadata, null, Pointee};
+use std::ptr::null;
+#[cfg(feature = "unstable")]
+use std::ptr::{metadata, Pointee};
 
 const A: &str = "sdf";
 static B: &str = "sd";
@@ -110,17 +112,20 @@ fn main() {
         println!("方法六，通过unsafe代码实现 -- trait object --> any: parent2.parent()");
         parent2.parent();
     }
-    unsafe {//方法七，通过 metadata来， parent --> sub，此方法需要nightly版
-        let (data, parent_meta) = (parent as *const Parent).to_raw_parts();
-        let sub2 = ptr::from_raw_parts::<Sub>(data, (ptr::null::<MyStruct>() as *const Sub).to_raw_parts().1);
-        println!("方法七，通过 metadata来， parent --> sub，此方法需要nightly版");
-        (*sub2).sub();
-    }
-    unsafe {//方法八，通过 metadata来， sub --> parent，此方法需要nightly版
-        let (data, sub_meta) = (sub as *const Sub).to_raw_parts();
-        let parent2 = ptr::from_raw_parts::<Parent>(data, (ptr::null::<MyStruct>() as *const Parent).to_raw_parts().1);
-        println!("方法八，通过 metadata来， sub --> parent，此方法需要nightly版");
-        (*parent2).parent();
+    #[cfg(feature = "unstable")]
+    {
+        unsafe {//方法七，通过 metadata来， parent --> sub，此方法需要nightly版
+            let (data, parent_meta) = (parent as *const Parent).to_raw_parts();
+            let sub2 = ptr::from_raw_parts::<Sub>(data, (ptr::null::<MyStruct>() as *const Sub).to_raw_parts().1);
+            println!("方法七，通过 metadata来， parent --> sub，此方法需要nightly版");
+            (*sub2).sub();
+        }
+        unsafe {//方法八，通过 metadata来， sub --> parent，此方法需要nightly版
+            let (data, sub_meta) = (sub as *const Sub).to_raw_parts();
+            let parent2 = ptr::from_raw_parts::<Parent>(data, (ptr::null::<MyStruct>() as *const Parent).to_raw_parts().1);
+            println!("方法八，通过 metadata来， sub --> parent，此方法需要nightly版");
+            (*parent2).parent();
+        }
     }
 
     //下面是TraitObject，与vtable的定义
@@ -145,12 +150,14 @@ fn main() {
     }
 
     //新版的定义如下：
+    #[cfg(feature = "unstable")]
     {
         #[allow(dead_code)]//为了去掉编译的waring
         pub(crate) struct PtrComponents<T: ?Sized> {
             pub(crate) data_address: *const (),
             pub(crate) metadata: <T as Pointee>::Metadata, //这里就是vtable
         }
+
         #[allow(dead_code)]//为了去掉编译的waring
         struct VTable {
             drop_in_place: fn(*mut ()),

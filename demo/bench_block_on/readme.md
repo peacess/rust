@@ -1,23 +1,27 @@
 # see
+
 [block on](https://github.com/async-rs/async-task/blob/master/examples/block.rs)  
 [build_your_own_block_on](https://stevenbai.top/rust/build_your_own_block_on/)
-async-task有多个版：  
-1. https://github.com/async-rs/async-task  
-2. https://github.com/smol-rs/async-task  
+async-task有多个版：
 
-# rust async runtime 的 block on bench 测试结果  
+1. https://github.com/async-rs/async-task
+2. https://github.com/smol-rs/async-task
+
+# rust async runtime 的 block on bench 测试结果
+
 速度比较（ns / op, 平均一次运行时间）  
-tokio                   time:   [118.44 ns 118.45 ns 118.46 ns]  
-smol                    time:   [117.41 ns 117.72 ns 118.06 ns]  
-futures                 time:   [29.487 ns 29.488 ns 29.488 ns]  
-async_std               time:   [825.67 ns 826.50 ns 827.29 ns]  
-futures_lite            time:   [22.708 ns 22.712 ns 22.717 ns]  
-directly code           time:   [22.012 ns 22.019 ns 22.027 ns]  
-extreme                 time:   [229.79 ns 230.06 ns 230.34 ns]  
+tokio time:   [118.44 ns 118.45 ns 118.46 ns]  
+smol time:   [117.41 ns 117.72 ns 118.06 ns]  
+futures time:   [29.487 ns 29.488 ns 29.488 ns]  
+async_std time:   [825.67 ns 826.50 ns 827.29 ns]  
+futures_lite time:   [22.708 ns 22.712 ns 22.717 ns]  
+directly code time:   [22.012 ns 22.019 ns 22.027 ns]  
+extreme time:   [229.79 ns 230.06 ns 230.34 ns]
 
 其中 “directly code”是手动实现的block on
 
-下面是原始运行结果  
+下面是原始运行结果
+
 ```
 Benchmarking tokio
 Benchmarking tokio: Warming up for 3.0000 s

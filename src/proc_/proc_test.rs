@@ -1,4 +1,3 @@
-
 /// [Rust笔记 -- 规则宏的“卫生保健](https://mp.weixin.qq.com/s/8hp1HhLGEH_ve-OsIYhS8w)
 #[test]
 fn test_alien_local() {

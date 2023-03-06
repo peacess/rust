@@ -2,6 +2,7 @@ use std::ops::Deref;
 
 use criterion::{Criterion, criterion_group, criterion_main, PlotConfiguration, PlottingBackend};
 
+#[inline(never)]
 fn sum(data: &[i64]) -> i64 {
     let mut re = i64::default();
     for i in 0..data.len() {
@@ -17,6 +18,7 @@ trait Summer {
 struct SummerImp {}
 
 impl Summer for SummerImp {
+    #[inline(never)]
     fn sum(&self, data: &[i64]) -> i64 {
         let mut re = i64::default();
         for i in 0..data.len() {

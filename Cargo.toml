@@ -25,34 +25,34 @@ path = "src/trait_/trait_object_.rs"
 name = "demo_2022_0226"
 path = "src/demo_2022_0226/demo1.rs"
 
+[[bench]]
+name = "bench_block_on"
+path = "src/async_thread/block_on_.rs"
+harness = false
+
 [dependencies]
-lazy_static = "1.4.0"
+lazy_static = "*"
 once_cell = "*"
 static_init = "*"
-tokio = { version = "1.12.0", features = ["full"] }
-num_cpus = "1.13.1"
-libc = "0.2.122"
-cargo-valgrind = "2.1.0"
-
-futures = "*"
-
-[dev-dependencies]
-
-#block_on
-futures = "*"
-async-std = "*"
-futures-lite = "*"
 tokio = { version = "*", features = ["full"] }
-smol = "*"
-extreme = "*"
+num_cpus = "*"
+libc = "*"
+cargo-valgrind = "*"
 
+futures = "*"
+crossbeam = "*"
 async-task = "*"
 waker-fn = "*"
 pin-utils = "*"
-crossbeam = "*"
-#end block_on
+async-std = "*"
+futures-lite = "*"
+smol = "*"
+extreme = "*"
 
-futures-io = "0.3.19"
+criterion = {version="0.4.0",features=["html_reports"]}
+
+[dev-dependencies]
+futures-io = "*"
 
 [workspace]
 members = ["rust_kits","demo/bench_block_on","demo/fn_gen_trait_closure"]

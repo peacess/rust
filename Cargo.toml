@@ -2,7 +2,7 @@
 name = "rust"
 version = "0.1.0"
 authors = ["Peacess <peacess@163.com>"]
-edition = "2018"
+edition = "2021"
 
 [lib]
 name = "rust"
@@ -11,10 +11,6 @@ path = "src/lib.rs"
 [[bin]]
 name = "mybin"
 path = "src/main.rs"
-
-[[bin]]
-name = "async_order"
-path = "src/async_thread/order_.rs"
 
 [[bench]]
 name = "bench_block_on"

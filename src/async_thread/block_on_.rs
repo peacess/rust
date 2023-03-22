@@ -1,5 +1,4 @@
 use std::future::Future;
-use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::task::Waker;
 
@@ -85,6 +84,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     let mut c = c.benchmark_group("compare: ");
     const TIMES: i32 = 2;
     let tokio_ = tokio::runtime::Runtime::new().expect("");
+    let _ = &tokio_;
     c.bench_function("block_on_async_std", |b| b.iter(|| {
         async_std::task::block_on(async { 1 });
     }));

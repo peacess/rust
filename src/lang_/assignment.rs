@@ -2,8 +2,11 @@
 fn test_assign() {
     {
         let t: usize = 0;
+        let _ = t;
         let mut t = 1;
+        let _ = t;
         let ref1_t = &t;//ref_t1为 &T类型
+        let _ = ref1_t;
         // ref1_t = &t1; //不是mut &，不能二次赋值
         // *ref1_t = 2;  //不是 mut t，不能二次赋值
 
@@ -12,8 +15,10 @@ fn test_assign() {
         *ref2_t = 3;//是 mut t，能二次赋值
 
         let mut ref_t3 = &mut t;
+        let _ = ref_t3;
         ref_t3 = &mut t; //是mut &，能二次赋值
         *ref_t3 = 2;  //是 mut t，能二次赋值
+        println!("{}", ref_t3);
     }
     {//在let赋值时，栈部分是内存copy的，也就是一个浅copy
         /// 总结

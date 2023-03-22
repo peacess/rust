@@ -41,8 +41,8 @@ impl<T> AtomicT<T> {
         let temp = self.0.load(order);
         if temp.is_null() {
             return None;
-        }else{
-            return Some(unsafe { (*temp).clone() })
+        } else {
+            return Some(unsafe { (*temp).clone() });
         }
     }
 
@@ -61,8 +61,8 @@ impl<T> AtomicT<T> {
         let temp = self.0.swap(ptr_data, order);
         if temp.is_null() {
             return None;
-        }else{
-            let t = unsafe {Box::from_raw(temp)};
+        } else {
+            let t = unsafe { Box::from_raw(temp) };
             return Some(t.as_ref().clone());
         }
     }

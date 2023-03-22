@@ -48,6 +48,7 @@ fn sample_error1_method1() {
     let mutex = tokio::sync::Mutex::<i32>::new(0);
     tokio::spawn(async move {
         let v = mutex.lock().await;
+        let _ = v;
         async {}.await;
         println!("{}", "");
     });
@@ -59,6 +60,7 @@ fn sample_error1_method2() {
     tokio::spawn(async move {
         {
             let v = mutex.lock().expect("");
+            let _ = &v;
         }
         async {}.await;
         println!("{}", "");

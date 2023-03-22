@@ -3,7 +3,7 @@
 mod test {
     use std::{pin::Pin, task::Poll};
 
-    use futures_io::{AsyncBufRead, AsyncRead};
+    use futures_io::AsyncRead;
 
     //不能通过编译
     struct Body(Vec<u8>);

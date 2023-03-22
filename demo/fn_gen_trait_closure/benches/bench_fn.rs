@@ -1,6 +1,4 @@
-use std::ops::Deref;
-
-use criterion::{Criterion, criterion_group, criterion_main, PlotConfiguration, PlottingBackend};
+use criterion::{Criterion, criterion_group, criterion_main};
 
 #[inline(never)]
 fn sum(data: &[i64]) -> i64 {

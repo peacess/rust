@@ -3,7 +3,6 @@ name = "rust"
 version = "0.1.0"
 authors = ["Peacess <peacess@163.com>"]
 edition = "2018"
-resover = "2"
 
 [lib]
 name = "rust"
@@ -17,14 +16,6 @@ path = "src/main.rs"
 name = "async_order"
 path = "src/async_thread/order_.rs"
 
-[[bin]]
-name = "trait"
-path = "src/trait_/trait_object_.rs"
-
-[[bin]]
-name = "demo_2022_0226"
-path = "src/demo_2022_0226/demo1.rs"
-
 [[bench]]
 name = "bench_block_on"
 path = "src/async_thread/block_on_.rs"
@@ -37,7 +28,6 @@ static_init = "*"
 tokio = { version = "*", features = ["full"] }
 num_cpus = "*"
 libc = "*"
-cargo-valgrind = "*"
 
 futures = "*"
 crossbeam = "*"
@@ -49,10 +39,10 @@ futures-lite = "*"
 smol = "*"
 extreme = "*"
 
-criterion = {version="0.4.0",features=["html_reports"]}
+criterion = { version = "0.4.0", features = ["html_reports"] }
 
 [dev-dependencies]
 futures-io = "*"
 
 [workspace]
-members = ["rust_kits","demo/bench_block_on","demo/fn_gen_trait_closure"]
+members = ["rust_kits", "demo/bench_block_on", "demo/fn_gen_trait_closure"]

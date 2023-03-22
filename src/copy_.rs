@@ -58,5 +58,6 @@ fn test_auto_copy() {
 
     let d = D { a: 10 };
     let d2 = d;
+    let _ = d2;
     // println!("{:?}", d);
 }

@@ -5,8 +5,11 @@ fn test_closure() {
     /// 2. 加move的closure可以是任意三种
     /// 3. 加move的
 
-    fn fn_once<F>(func: F) where F: FnOnce() {
-        func();//只能调用一次，&func也不行
+    fn fn_once<F>(func: F)
+    where
+        F: FnOnce(),
+    {
+        func(); //只能调用一次，&func也不行
     }
     {
         let mut a = "fn_once".to_owned();
@@ -15,27 +18,35 @@ fn test_closure() {
             println!("{}", a)
         };
         let f2 = f;
-        fn_once(f);//f 自动实现了 Copy,所以可以再一次使用变量f
+        fn_once(f); //f 自动实现了 Copy,所以可以再一次使用变量f
         fn_once(f2);
     }
     {
-        fn fn_once<F>(func: F) where F: FnOnce() { func() }
+        fn fn_once<F>(func: F)
+        where
+            F: FnOnce(),
+        {
+            func()
+        }
         let a = "fn_once move".to_owned();
         let f = move || println!("{}", a);
         f();
         (&f)();
-        fn_once(&f);//可以多次调用
+        fn_once(&f); //可以多次调用
         fn_once(f);
         //fn_once(f); //error[E0382]: use of moved value: `f`。有move时不会实现 Copy
     }
-    fn fn_<F>(func: F) where F: Fn() {
+    fn fn_<F>(func: F)
+    where
+        F: Fn(),
+    {
         func();
     }
     {
         let a = "fn".to_owned();
         let f = || println!("{}", a);
         let f2 = f;
-        fn_(f);//f 自动实现了 Copy,所以可以再一次使用变量f
+        fn_(f); //f 自动实现了 Copy,所以可以再一次使用变量f
         fn_(f2);
     }
     {
@@ -45,7 +56,10 @@ fn test_closure() {
         fn_(f);
     }
 
-    fn fn_mut<F>(mut func: F) where F: FnMut() {
+    fn fn_mut<F>(mut func: F)
+    where
+        F: FnMut(),
+    {
         func();
     }
     {
@@ -95,3 +109,33 @@ fn test_closure() {
     // }
 }
 
+#[test]
+fn test_run() {
+    {
+        let mut list = vec![1, 2];
+        let mut bm = || list.push(3);
+        // print!("before call: {:?}", list);//编译错误， 因为在closure中是 mut reference捕获，所以不能再有 immut reference了
+        bm();
+        print!("after call: {:?}", list);
+    }
+    {
+        #[derive(Debug)]
+        struct Rectangle{
+            width: u32,
+        }
+
+        let mut list = [
+            Rectangle{width:10}, Rectangle{width:15},
+        ];
+
+        let mut sort_info = vec!["".to_owned()];
+        let value = String::from("value");
+        // list.sort_by_key(|r|{ //编译不通过，因为value是 owner方式捕获， 这样它只实现FnOnce，而不能被多次调用
+        //     sort_info.push(value);
+        //     r.width
+        // });
+        println!("{:?}", list);
+        let _ = sort_info;
+        let _ = value;
+    }
+}

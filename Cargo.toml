@@ -12,6 +12,10 @@ path = "src/lib.rs"
 name = "mybin"
 path = "src/main.rs"
 
+[[bin]]
+name = "http_"
+path = "src/net_/http_.rs"
+
 [[bench]]
 name = "bench_block_on"
 path = "src/async_thread/block_on_.rs"
@@ -24,6 +28,8 @@ static_init = "*"
 tokio = { version = "*", features = ["full"] }
 num_cpus = "*"
 libc = "*"
+
+crossbeam-channel = "0.5"
 
 futures = "*"
 crossbeam = "*"

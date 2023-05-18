@@ -920,6 +920,7 @@ dependencies = [
  "async-task",
  "criterion",
  "crossbeam",
+ "crossbeam-channel",
  "extreme",
  "futures",
  "futures-io",

@@ -1,27 +1,27 @@
-//!Just doc sample for the mod mylib::doc_
+//!Just doc sample for the mod rust::doc_
 //!
 //!
 //! # Samples
 //! ```
-//! use mylib::doc_::Data;
+//! use rust::doc_::Data;
 //!
 //! let modData = Data::new();
 //! ```
 //!
 
 
-/// Just doc sample for the mylib::doc_::Data
+/// Just doc sample for the rust::doc_::Data
 ///
 ///
 /// # Samples
 ///
 /// ```rust,editable
-/// use mylib::doc_::Data;
+/// use rust::doc_::Data;
 /// let data = Data::new();
 /// ```
 /// use the [`Data::new`]
 ///
-/// use 2 the [crate::doc_::Data]
+/// use 2 the [rust::doc_::Data]
 ///
 /// see the [`Vec`]
 ///

@@ -16,6 +16,10 @@ path = "src/main.rs"
 name = "http_"
 path = "src/net_/http_.rs"
 
+[[bin]]
+name = "memory_leak"
+path = "src/ref_pointer/memory_leak.rs"
+
 [[bench]]
 name = "bench_block_on"
 path = "src/async_thread/block_on_.rs"
@@ -28,6 +32,7 @@ static_init = "*"
 tokio = { version = "*", features = ["full"] }
 num_cpus = "*"
 libc = "*"
+procinfo = "*"
 
 crossbeam-channel = "0.5"
 
@@ -42,6 +47,9 @@ smol = "*"
 extreme = "*"
 
 criterion = { version = "0.4.0", features = ["html_reports"] }
+
+[target.'cfg(not(target_env = "msvc"))'.dependencies]
+jemallocator = "0.3.2"
 
 [dev-dependencies]
 futures-io = "*"

@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct AtomicGetSet<T>(pub T);
 
 impl<T: bytemuck::NoUninit> AtomicGetSet<atomic::Atomic<T>> {

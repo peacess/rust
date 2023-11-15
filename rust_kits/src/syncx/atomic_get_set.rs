@@ -56,4 +56,22 @@ std_atomic!(std::sync::atomic::AtomicU32, u32);
 std_atomic!(std::sync::atomic::AtomicU64, u64);
 std_atomic!(std::sync::atomic::AtomicUsize, usize);
 
+#[cfg(test)]
+mod test {
+    use crate::syncx::AtomicGetSet;
+
+    #[derive(Clone, Copy)]
+    enum Status{
+        None = 0,
+        Ok = 1,
+    }
+
+    unsafe impl bytemuck::NoUninit for Status{}
+
+    #[test]
+    fn test(){
+        let _ = AtomicGetSet::<atomic_g::Atomic<Status>>::new(Status::None);
+    }
+}
+
 

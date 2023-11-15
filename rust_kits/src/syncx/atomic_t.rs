@@ -99,8 +99,8 @@ mod tests {
     #[test]
     fn drop_self_test() {
         {//case one
-            let mut p = AtomicT::new(1);
-            mem::drop(&mut p);
+            let p = AtomicT::new(1);
+            mem::drop( p);
         }
         {// 各种操作是否有内存问题
             let p = AtomicT::new(1);

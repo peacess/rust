@@ -1,6 +1,6 @@
 [package]
 name = "rust_kits"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Andy <peacess@163.com>"]
 description = "rust tool kits"
@@ -13,3 +13,5 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+atomic = "0.6.0"
+bytemuck = "1.14.0"

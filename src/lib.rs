@@ -8,13 +8,9 @@
 #![allow(dead_code)]
 
 pub mod caller;
-pub mod r_static;
 mod ref_pointer;
-mod types_;
 mod macro_;
-mod sized_;
 mod format_;
-mod enum_;
 pub mod doc_;
 mod closure_;
 mod copy_;

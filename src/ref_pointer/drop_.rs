@@ -29,7 +29,7 @@ mod test {
         let d = Data::new(&x);
         drop(d);
         let b = Box::new(&mut x);
-        println!("{}", x);
+        // println!("{}", x);
         let _ = b;
     }
 }

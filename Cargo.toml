@@ -8,23 +8,6 @@ edition = "2021"
 name = "rust"
 path = "src/lib.rs"
 
-[[bin]]
-name = "mybin"
-path = "src/main.rs"
-
-[[bin]]
-name = "http_"
-path = "src/net_/http_.rs"
-
-[[bin]]
-name = "memory_leak"
-path = "src/ref_pointer/memory_leak.rs"
-
-[[bench]]
-name = "bench_block_on"
-path = "src/async_thread/block_on_.rs"
-harness = false
-
 [dependencies]
 lazy_static = "*"
 once_cell = "*"
@@ -56,3 +39,28 @@ futures-io = "*"
 
 [workspace]
 members = ["./","rust_kits", "demo/bench_block_on", "demo/fn_gen_trait_closure"]
+
+[[bin]]
+name = "mybin"
+path = "src/main.rs"
+
+[[bin]]
+name = "http_"
+path = "src/net_/http_.rs"
+
+[[bin]]
+name = "memory_leak"
+path = "src/ref_pointer/memory_leak.rs"
+
+[[bin]]
+name = "thread_async"
+path = "src/async_thread/performe/thread_async.rs"
+
+[[bin]]
+name = "thread_fn"
+path = "src/async_thread/performe/thread_fn.rs"
+
+[[bench]]
+name = "bench_block_on"
+path = "src/async_thread/block_on_.rs"
+harness = false

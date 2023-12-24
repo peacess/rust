@@ -10,7 +10,6 @@ fn main() {
         }
         let du = start.elapsed();
         println!("sum: {} \n all: {}, t/s: {}", sum, du.as_nanos(),du.as_nanos()/MAX as u128);
-
     });
     let _ = t.join();
 }

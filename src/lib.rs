@@ -20,3 +20,4 @@ mod trait_;
 mod lang_;
 mod panic_error;
 mod proc_;
+mod design;

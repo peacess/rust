@@ -1,5 +1,5 @@
 
-大量对象需要实现 bytes to object（bytes_to_obj）  
+(rust)大量对象需要实现 bytes to object（bytes_to_obj）  
 有如下几种实现：  
 1.  给每一个对象实现一个方法 bytes_to_obj  
 2.  定义一个trait BytesObj，给ByteObj一个范型实现  

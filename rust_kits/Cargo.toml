@@ -1,13 +1,13 @@
 [package]
 name = "rust_kits"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Andy <peacess@163.com>"]
 description = "rust tool kits"
 repository = "https://github.com/peacess/rust"
 homepage = "https://github.com/peacess/rust"
 keywords = ["rust", "kits"]
-categories = ["tools"]
+categories = ["kits"]
 license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

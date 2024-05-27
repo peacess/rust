@@ -11,7 +11,7 @@ mod test {
 
     #[test]
     fn get_mut_mut() {
-// 一个线程持有get_mut, 别一个线程是否可以拿到get_mut,它们的先后关系是什么
+        // 一个线程持有get_mut, 别一个线程是否可以拿到get_mut,它们的先后关系是什么
         let map = Arc::new(DashMap::new());
         let key = "test_id_".to_string();
         map.insert(key.clone(), "value".to_string());
@@ -45,7 +45,7 @@ mod test {
 
     #[test]
     fn get_get() {
-// 一个线程持有get, 别一个线程是否可以拿到get,它们的先后关系是什么
+        // 一个线程持有get, 别一个线程是否可以拿到get,它们的先后关系是什么
         let map = Arc::new(DashMap::new());
         let key = "test_id_".to_string();
         map.insert(key.clone(), "value".to_string());
@@ -79,7 +79,7 @@ mod test {
 
     #[test]
     fn get_mut_get() {
-// 一个线程持有get_mut, 别一个线程是否可以拿到get,它们的先后关系是什么
+        // 一个线程持有get_mut, 别一个线程是否可以拿到get,它们的先后关系是什么
         let map = Arc::new(DashMap::new());
         let key = "test_id_".to_string();
         map.insert(key.clone(), "value".to_string());
@@ -113,7 +113,7 @@ mod test {
 
     #[test]
     fn get_get_mut() {
-// 一个线程持有get, 别一个线程是否可以拿到get_mut,它们的先后关系是什么
+        // 一个线程持有get, 别一个线程是否可以拿到get_mut,它们的先后关系是什么
         let map = Arc::new(DashMap::new());
         let key = "test_id_".to_string();
         map.insert(key.clone(), "value".to_string());

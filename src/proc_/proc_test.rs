@@ -2,13 +2,13 @@
 #[test]
 fn test_alien_local() {
     macro_rules! using_a {
-        ($a:ident, $e: expr) => [{
+        ($a:ident, $e: expr) => {{
             let $a = 42;
             let a = 22;
-            $e/6
-        }];
+            $e / 6
+        }};
     }
     {}
-    let eight = using_a!(a, a+10);
+    let eight = using_a!(a, a + 10);
     assert_eq!(eight, 8);
 }

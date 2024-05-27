@@ -1,6 +1,6 @@
 pub use executor::*;
-pub mod syncx;
 mod executor;
+pub mod syncx;
 
 pub extern crate bytemuck;
 

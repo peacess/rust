@@ -75,4 +75,3 @@ fn sample_error1_method2() {
 /// 最后一定要看编译器的提示，这是最高效的解决方法
 
 fn sample() {}
-

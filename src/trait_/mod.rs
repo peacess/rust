@@ -1,7 +1,7 @@
+mod from_;
 mod impl_ref;
 mod trait_;
 mod trait_object_;
-mod from_;
 
 /// (impl Trait for Type 和 impl Trait for &Type 是什么关系)[https://rustcc.cn/article?id=d993e943-64df-4252-9467-155b2a43a9d5]
 mod test {

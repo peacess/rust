@@ -9,7 +9,6 @@
 //! ```
 //!
 
-
 /// Just doc sample for the rust::doc_::Data
 ///
 ///
@@ -39,8 +38,6 @@ impl Data {
     /// new struct [Data]
     /// see the field [Data::name]
     pub fn new() -> Self {
-        Data {
-            name: "".to_owned(),
-        }
+        Data { name: "".to_owned() }
     }
 }

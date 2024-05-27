@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test {
-    use std::sync::{Arc, Barrier};
     use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+    use std::sync::{Arc, Barrier};
     use std::thread;
 
     #[test]
@@ -22,14 +22,10 @@ mod test {
         for _ in 0..100000 {
             let a_clone = a.clone();
             let b_clone = b.clone();
-            let t2 = thread::spawn(move || {
-                read_b_a(a_clone, b_clone)
-            });
+            let t2 = thread::spawn(move || read_b_a(a_clone, b_clone));
             let a_clone = a.clone();
             let b_clone = b.clone();
-            let t1 = thread::spawn(move || {
-                store_a_b(a_clone, b_clone, true)
-            });
+            let t1 = thread::spawn(move || store_a_b(a_clone, b_clone, true));
 
             t1.join().expect("");
             t2.join().expect("");
@@ -84,8 +80,8 @@ mod test {
     #[cfg(any(test))]
     mod test_relaxed {
         use std::cell::UnsafeCell;
-        use std::sync::{Arc, Barrier};
         use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::sync::{Arc, Barrier};
         use std::thread;
 
         struct UsizePair {
@@ -94,7 +90,7 @@ mod test {
         }
 
         // UnsafeCell is not thread-safe. So manually mark our UsizePair to be Sync.
-// (Effectively telling the compiler "I'll take care of it!")
+        // (Effectively telling the compiler "I'll take care of it!")
         unsafe impl Sync for UsizePair {}
 
         impl UsizePair {
@@ -184,9 +180,9 @@ mod test {
 
     #[cfg(any(test))]
     mod test2 {
+        use std::sync::atomic::{fence, AtomicBool, Ordering};
         /// [see](https://github.com/freepeace/code_styles/blob/master/atomic_volatile_order-cn.md)
         use std::sync::Arc;
-        use std::sync::atomic::{AtomicBool, fence, Ordering};
         use std::thread;
 
         #[test]

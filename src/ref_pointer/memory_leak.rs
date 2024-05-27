@@ -5,8 +5,8 @@ use jemallocator::Jemalloc;
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
-const FOR_1 : i32 = 1_00;
-const FOR_2 : i32 = 1_000;
+const FOR_1: i32 = 1_00;
+const FOR_2: i32 = 1_000;
 const FOR_LEN: i32 = 3;
 // 默认内存分配输出，
 // 从中可以看出，vec与binary heap运行后，内存全部释放
@@ -42,7 +42,6 @@ const FOR_LEN: i32 = 3;
 // hash map:    Statm { size: 4068, resident: 1056, share: 864, text: 694, data: 2669 }
 // hash map:    Statm { size: 4068, resident: 1056, share: 864, text: 694, data: 2669 }
 fn main() {
-
     let memory = procinfo::pid::statm(std::process::id() as i32);
     println!("             {:?}", memory.expect(""));
     for _ in 0..FOR_LEN {

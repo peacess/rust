@@ -1,0 +1,4 @@
+[tasks.format]
+toolchain = "nightly"
+command = "cargo"
+args = ["fmt"]

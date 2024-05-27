@@ -30,7 +30,6 @@ mod test2 {
     //能通过编译
     struct Body(Vec<u8>);
 
-
     impl std::io::Read for Body {
         fn read(&mut self, buf: &mut [u8]) -> futures_io::Result<usize> {
             todo!()

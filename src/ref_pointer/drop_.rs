@@ -6,9 +6,7 @@ mod test {
 
     impl<T> Data<T> {
         fn new(t: T) -> Self {
-            Data {
-                p: Box::into_raw(Box::new(t)),
-            }
+            Data { p: Box::into_raw(Box::new(t)) }
         }
     }
 

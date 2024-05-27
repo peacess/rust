@@ -61,17 +61,15 @@ mod test {
     use crate::syncx::AtomicGetSet;
 
     #[derive(Clone, Copy)]
-    enum Status{
+    enum Status {
         None = 0,
         Ok = 1,
     }
 
-    unsafe impl bytemuck::NoUninit for Status{}
+    unsafe impl bytemuck::NoUninit for Status {}
 
     #[test]
-    fn test(){
+    fn test() {
         let _ = AtomicGetSet::<atomic_g::Atomic<Status>>::new(Status::None);
     }
 }
-
-

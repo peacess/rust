@@ -1,6 +1,4 @@
-
 /// see(https://blog.dureuill.net/articles/nolife/)
-
 use std::{fs::File, io::Read};
 
 use zip::{read::ZipFile, ZipArchive};
@@ -10,11 +8,7 @@ impl<'a> nolife::Family<'a> for ZipFamily {
     type Family = ZipFile<'a>;
 }
 
-async fn zip_file(
-    file_name: String,
-    member_name: String,
-    mut time_capsule: nolife::TimeCapsule<ZipFamily>,
-) -> nolife::Never {
+async fn zip_file(file_name: String, member_name: String, mut time_capsule: nolife::TimeCapsule<ZipFamily>) -> nolife::Never {
     let file = File::open(file_name).unwrap();
     let mut archive = ZipArchive::new(file).unwrap();
     let mut by_name = archive.by_name(&member_name).unwrap();
@@ -32,18 +26,14 @@ impl Read for ZipStreamer {
 }
 
 pub fn zip_streamer(file_name: String, member_name: String) -> impl std::io::Read {
-    let zip_scope =
-        nolife::DynBoxScope::pin(|time_capsule| zip_file(file_name, member_name, time_capsule));
+    let zip_scope = nolife::DynBoxScope::pin(|time_capsule| zip_file(file_name, member_name, time_capsule));
     ZipStreamer { zip_scope }
 }
 
 #[test]
 fn test_run() {
     let mut output = String::new();
-    zip_streamer(
-        std::env::args().nth(1).unwrap(),
-        std::env::args().nth(2).unwrap(),
-    )
+    zip_streamer(std::env::args().nth(1).unwrap(), std::env::args().nth(2).unwrap())
         .read_to_string(&mut output)
         .unwrap();
     println!("{}", output);

@@ -4,6 +4,7 @@
 
 cargo install mdbook  
 cargo install mdbook-epub  
+cargo install --force cargo-make  
 git clone https://github.com/rust-lang/book.git  
 cd book  
 add the following in the file "book.toml"   

@@ -21,11 +21,13 @@ fn test_map_and_then() {
         print!("{}", t);
         let tt: Option<i32> = Some(1);
         tt
-    }).and_then(|t2| {
+    })
+    .and_then(|t2| {
         print!("{}", t2);
         let tt: Option<i32> = None;
         tt
-    }).or_else(|| {
+    })
+    .or_else(|| {
         let tt: Option<i32> = None;
         tt
     });
@@ -49,6 +51,6 @@ fn test_match() {
     let arr = [2, 2, 3];
     match arr {
         [1, _, _] => println!("starts with one"),
-        [a, b, c] => println!("{} {} {}", a, b, c)
+        [a, b, c] => println!("{} {} {}", a, b, c),
     };
 }

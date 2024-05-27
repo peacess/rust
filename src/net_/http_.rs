@@ -71,10 +71,7 @@ impl ThreadPool {
             workers.push(Worker::new(id, receiver.clone()));
         }
 
-        ThreadPool {
-            workers,
-            sender: Some(sender),
-        }
+        ThreadPool { workers, sender: Some(sender) }
     }
 
     pub fn execute<F>(&self, f: F)
@@ -100,9 +97,6 @@ impl Worker {
                 job();
             }
         });
-        Worker {
-            id,
-            thread: Some(thread),
-        }
+        Worker { id, thread: Some(thread) }
     }
 }

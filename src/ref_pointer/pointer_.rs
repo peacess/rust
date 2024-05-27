@@ -1,6 +1,5 @@
 #[cfg(test)]
 mod test {
-    use std::{fmt, ptr};
     use std::alloc::{alloc, Layout};
     use std::borrow::Cow;
     use std::cell::RefCell;
@@ -8,6 +7,7 @@ mod test {
     use std::fmt::{Formatter, Pointer};
     use std::mem;
     use std::mem::{ManuallyDrop, MaybeUninit};
+    use std::{fmt, ptr};
 
     #[test]
     fn test_ptr() {
@@ -55,10 +55,9 @@ mod test {
 
         assert_eq!(v, &[0.into()]);
 
-// Ensure that the last item was dropped.
+        // Ensure that the last item was dropped.
         assert!(weak.upgrade().is_none());
     }
-
 
     #[test]
     fn test_string() {
@@ -151,9 +150,9 @@ mod test {
 
     #[test]
     fn test_raw_c_char() {
-        use std::os::raw::c_char;
-        use std::mem::ManuallyDrop;
         use std::mem::transmute;
+        use std::mem::ManuallyDrop;
+        use std::os::raw::c_char;
         {
             let mut s = "".as_bytes().to_vec();
             s.push(0);
@@ -167,7 +166,9 @@ mod test {
             let s = "5p";
             let temp = unsafe { transmute::<_, &[i8]>(s) };
             let mut s: Vec<c_char> = Vec::with_capacity(s.len() + 1);
-            unsafe { s.set_len(s.capacity() - 1); }
+            unsafe {
+                s.set_len(s.capacity() - 1);
+            }
             s.copy_from_slice(temp);
             s.push(0);
             let raw_s = s.as_mut_ptr();
@@ -178,7 +179,9 @@ mod test {
             let s = CString::new("").unwrap();
             let raw_s = s.into_raw();
             //free memory
-            unsafe { CString::from_raw(raw_s); }
+            unsafe {
+                CString::from_raw(raw_s);
+            }
         }
     }
 
@@ -216,29 +219,29 @@ mod test {
         let t3 = &&&data;
         let t4 = &&&&data;
 
-        assert_eq!(t1, *t2);//值相等
+        assert_eq!(t1, *t2); //值相等
         {
-            assert!(t1 == *t2);//same as assert_eq, PartialEq
+            assert!(t1 == *t2); //same as assert_eq, PartialEq
             let p1 = t1 as *const _;
             let p2 = *t2 as *const _;
             assert!(p1 == p2); //raw pointer并没有实现 PartialEq，而是地址是否相等
 
             let p1 = &p1 as *const *const _;
             let p2 = &p2 as *const *const _;
-            assert!(p1 != p2);//raw pointer并没有实现 PartialEq，而是地址是否相等
+            assert!(p1 != p2); //raw pointer并没有实现 PartialEq，而是地址是否相等
         }
-        assert!(std::ptr::eq(t1, *t2));//指针地址相等
-        assert_eq!(t2, *t3);//值相等
-        assert!(!std::ptr::eq(t2, *t3));//指针地址不相等
+        assert!(std::ptr::eq(t1, *t2)); //指针地址相等
+        assert_eq!(t2, *t3); //值相等
+        assert!(!std::ptr::eq(t2, *t3)); //指针地址不相等
 
-        assert_eq!(t3, *t4);//值相等
-        assert!(!std::ptr::eq(t3, *t4));//指针地址不相等
+        assert_eq!(t3, *t4); //值相等
+        assert!(!std::ptr::eq(t3, *t4)); //指针地址不相等
 
-        assert_eq!(t1, **t3);//值相等
-        assert!(std::ptr::eq(t1, **t3));//指针地址相等
+        assert_eq!(t1, **t3); //值相等
+        assert!(std::ptr::eq(t1, **t3)); //指针地址相等
 
-        assert_eq!(t1, ***t4);//值相等
-        assert!(std::ptr::eq(t1, ***t4));//指针地址相等
+        assert_eq!(t1, ***t4); //值相等
+        assert!(std::ptr::eq(t1, ***t4)); //指针地址相等
     }
 
     /// 总结
@@ -310,7 +313,8 @@ mod test {
     fn test_eq() {
         let s = 1;
         let s2 = 1;
-        {//值相同，但指针不同
+        {
+            //值相同，但指针不同
             assert!(s == s2);
             assert!(&s == &s2);
 
@@ -327,7 +331,8 @@ mod test {
             assert!(!std::ptr::eq(ref_s, ref_s2));
             assert!(!std::ptr::eq(raw_s, raw_s2));
         }
-        {//同一变量的引用
+        {
+            //同一变量的引用
             let ref_s = &s;
             let ref_s2 = &s;
             assert_eq!(ref_s, ref_s2);
@@ -379,7 +384,8 @@ mod test {
             let t = Box::new(std::ptr::null_mut());
             Box::into_raw(t)
         }
-        fn ok2_d_raw<T>() -> *mut *mut T {//可以正确工作，但为了统一free内存，不建议这种方式
+        fn ok2_d_raw<T>() -> *mut *mut T {
+            //可以正确工作，但为了统一free内存，不建议这种方式
             let layout = std::alloc::Layout::new::<*mut *mut T>();
             //注意分配内存时，一定注意是否需要 zeroed.
             let t = unsafe { std::alloc::alloc_zeroed(layout) } as *mut *mut T;
@@ -389,7 +395,7 @@ mod test {
         fn free_d_raw<T>(d: &mut *mut *mut T) {
             if *d != std::ptr::null_mut() {
                 unsafe {
-                    let f = &mut **d;//是两个*号，第一个对应的是 &mut
+                    let f = &mut **d; //是两个*号，第一个对应的是 &mut
                     if *f != std::ptr::null_mut() {
                         let _ = Box::from_raw(*f);
                         *f = std::ptr::null_mut();
@@ -399,14 +405,16 @@ mod test {
                 }
             }
         }
-        let d1 = err_d_raw();//不要释放这个内存，它是stack，释放会产生未知错误
+        let d1 = err_d_raw(); //不要释放这个内存，它是stack，释放会产生未知错误
         let mut d2 = ok1_d_raw::<i32>();
         free_d_raw(&mut d2);
         let mut d3 = ok2_d_raw::<i32>(); //由于使用的alloc直接分配的内存，最好使用dealloc来free内存，配对使用
         free_d_raw(&mut d3);
 
         let mut d4 = ok1_d_raw::<i32>();
-        unsafe { *d4 = Box::into_raw(Box::new(10)); }
+        unsafe {
+            *d4 = Box::into_raw(Box::new(10));
+        }
         free_d_raw(&mut d4);
 
         assert_ne!(d1, std::ptr::null_mut());
@@ -425,7 +433,9 @@ mod test {
 
     #[test]
     fn test_fn_parameter() {
-        fn cmp(x: i32, y: i32) -> bool { x > y }
+        fn cmp(x: i32, y: i32) -> bool {
+            x > y
+        }
 
         pub struct Heap<T> {
             vec: Vec<T>,
@@ -433,8 +443,7 @@ mod test {
         }
 
         impl<T: Copy> Heap<T> {
-            pub fn down(&mut self,
-                        index: usize) -> i32 {
+            pub fn down(&mut self, index: usize) -> i32 {
                 let arr = &mut self.vec;
                 if arr.capacity() < index {
                     return -1;
@@ -486,40 +495,47 @@ mod test {
         let p = v.as_mut_ptr();
         core::mem::forget(v);
         println!("Vec::from([0;64]): {:p}", p);
-        unsafe { Vec::from_raw_parts(p, 64, 64); }
-
+        unsafe {
+            Vec::from_raw_parts(p, 64, 64);
+        }
 
         //分配head的[0;64]，使用unsafe设置大小，最终分配内存还是会调用std::alloc::alloc
         let mut v = Vec::<i32>::with_capacity(64);
-        unsafe { v.set_len(64); }
+        unsafe {
+            v.set_len(64);
+        }
         let p = v.as_mut_ptr();
         core::mem::forget(v);
         println!("Vec::<i32>::with_capacity(: {:p}", p);
-        unsafe { Vec::from_raw_parts(p, 64, 64); }
+        unsafe {
+            Vec::from_raw_parts(p, 64, 64);
+        }
 
         //
         let v = Box::new([0; 64]);
         let mut p = Box::into_raw(v);
         let p = unsafe { (*p).as_mut_ptr() };
         println!("Box::new: {:p}", p);
-        unsafe { Box::from_raw(p); }
+        unsafe {
+            Box::from_raw(p);
+        }
 
         // 这里只是初始Box，而[i32;64]没有值
         #[allow(invalid_value)]
-            let v: Box<[i32; 64]> = unsafe { MaybeUninit::uninit().assume_init() };//MaybeUninit::zeroed()
+        let v: Box<[i32; 64]> = unsafe { MaybeUninit::uninit().assume_init() }; //MaybeUninit::zeroed()
         let p = Box::into_raw(v);
         println!("MaybeUninit::uninit().assume_init() for Box<[i32;64]>: {:p}", p);
 
         // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
         #[allow(invalid_value)]
-            let mut v: [i32; 64] = unsafe { MaybeUninit::uninit().assume_init() };
+        let mut v: [i32; 64] = unsafe { MaybeUninit::uninit().assume_init() };
         let p = v.as_mut_ptr();
         mem::forget(v);
         println!("MaybeUninit::uninit().assume_init() for [i32;64]: {:p}", p);
         //这里不能释放内存，因为v在stack上
 
         // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
-        let mut v: [i32; 64] = unsafe { mem::zeroed() };// same MaybeUninit::zeroed().assume_init()
+        let mut v: [i32; 64] = unsafe { mem::zeroed() }; // same MaybeUninit::zeroed().assume_init()
         let p = v.as_mut_ptr();
         mem::forget(v);
         println!("mem::zeroed(): {:p}", p);
@@ -527,9 +543,11 @@ mod test {
 
         //
         let layout = Layout::new::<[i32; 64]>();
-        let p = unsafe { std::alloc::alloc(layout) };//std::alloc::alloc_zeroed
+        let p = unsafe { std::alloc::alloc(layout) }; //std::alloc::alloc_zeroed
         println!("std::alloc::alloc: {:p}", p);
-        unsafe { std::alloc::dealloc(p, layout); }
+        unsafe {
+            std::alloc::dealloc(p, layout);
+        }
 
         //
         let mut p = unsafe { libc::malloc(mem::size_of::<i32>() * 64) } as *mut i32;
@@ -537,13 +555,14 @@ mod test {
             println!("libc malloc is null");
         } else {
             println!("std::alloc::alloc: {:p}", p);
-            unsafe { libc::free(p as *mut libc::c_void); }
+            unsafe {
+                libc::free(p as *mut libc::c_void);
+            }
         }
     }
 
-
     // 运行valgrind测试 cargo valgrind test --lib pointer_::test_vac_from_into_raw
-//
+    //
     #[test]
     fn test_vac_from_into_raw() {
         for _ in 0..100 {
@@ -558,8 +577,9 @@ mod test {
                 // 2，ManuallyDrop只是说明不调用drop函数
             };
 
-            unsafe { let _ = Vec::from_raw_parts(p, l, c); }
+            unsafe {
+                let _ = Vec::from_raw_parts(p, l, c);
+            }
         }
     }
 }
-

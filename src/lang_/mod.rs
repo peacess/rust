@@ -1,8 +1,8 @@
 #[cfg(any(test, doc))]
 mod assignment;
+mod construct;
 mod convert_;
 mod match_;
-mod tuple_copy;
-mod struct_enum_union;
 mod size_of_;
-mod construct;
+mod struct_enum_union;
+mod tuple_copy;

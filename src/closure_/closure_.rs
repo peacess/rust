@@ -120,13 +120,11 @@ fn test_run() {
     }
     {
         #[derive(Debug)]
-        struct Rectangle{
+        struct Rectangle {
             width: u32,
         }
 
-        let mut list = [
-            Rectangle{width:10}, Rectangle{width:15},
-        ];
+        let mut list = [Rectangle { width: 10 }, Rectangle { width: 15 }];
 
         let mut sort_info = vec!["".to_owned()];
         let value = String::from("value");

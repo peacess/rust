@@ -28,7 +28,12 @@ pub union U1 {
 #[test]
 fn test_s_e_u() {
     let t = (1i32, 3u32);
-    println!("struct: {}\ntuple struct:{}\nenum:{}\nunion:{}\ntuple:{}", size_of::<S1>(), size_of::<S2>(), size_of::<E1>(), size_of::<U1>(), size_of_val(&t));
+    println!(
+        "struct: {}\ntuple struct:{}\nenum:{}\nunion:{}\ntuple:{}",
+        size_of::<S1>(),
+        size_of::<S2>(),
+        size_of::<E1>(),
+        size_of::<U1>(),
+        size_of_val(&t)
+    );
 }
-
-

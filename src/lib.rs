@@ -7,18 +7,18 @@
 #![allow(unused)]
 #![allow(dead_code)]
 
+mod async_thread;
 pub mod caller;
-mod ref_pointer;
-mod macro_;
-mod format_;
-pub mod doc_;
 mod closure_;
 mod copy_;
+mod design;
+pub mod doc_;
 mod env_;
-mod async_thread;
-mod trait_;
+mod format_;
 mod lang_;
+mod life_;
+mod macro_;
 mod panic_error;
 mod proc_;
-mod design;
-mod life_;
+mod ref_pointer;
+mod trait_;

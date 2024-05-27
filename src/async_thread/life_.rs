@@ -9,11 +9,7 @@ mod test {
     struct Body(Vec<u8>);
 
     impl AsyncRead for Body {
-        fn poll_read(
-            self: Pin<&mut Self>,
-            cx: &mut std::task::Context<'_>,
-            buf: &mut [u8],
-        ) -> Poll<futures_io::Result<usize>> {
+        fn poll_read(self: Pin<&mut Self>, cx: &mut std::task::Context<'_>, buf: &mut [u8]) -> Poll<futures_io::Result<usize>> {
             todo!()
         }
     }

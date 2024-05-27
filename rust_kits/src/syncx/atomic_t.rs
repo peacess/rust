@@ -1,12 +1,12 @@
 use std::ptr;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicPtr, Ordering};
+use std::sync::Arc;
 
 /// AtomicT与　AtomicPtr：
 /// AtomicPtr：
 /// 1. 无锁线程安全
 /// 2. 它不会管理其中的raw指针
-/// AtomicT 优点：　
+/// AtomicT 优点：
 /// 1. 无锁线程安全（free lock）
 /// 2. 可以正确释放Ｔ对象 (free t)
 /// 3. 当一个对象被替换后，原来的对象还可以正常使用，且内存也会正常释放
@@ -51,7 +51,9 @@ impl<T> AtomicT<T> {
         let ptr_data = Box::into_raw(Box::new(data));
         let t = self.0.swap(ptr_data, order);
         if !t.is_null() {
-            unsafe { let _ = Box::from_raw(t); }
+            unsafe {
+                let _ = Box::from_raw(t);
+            }
         }
     }
 
@@ -89,8 +91,8 @@ impl<T> From<Arc<T>> for AtomicT<T> {
 #[cfg(test)]
 mod tests {
     use std::mem;
-    use std::sync::Arc;
     use std::sync::atomic::Ordering;
+    use std::sync::Arc;
 
     use crate::syncx::AtomicT;
 
@@ -98,11 +100,13 @@ mod tests {
     /// 注：　如果没有安装　valgrind 需要先运行：　cargo install cargo-valgrind
     #[test]
     fn drop_self_test() {
-        {//case one
+        {
+            //case one
             let p = AtomicT::new(1);
-            mem::drop( p);
+            mem::drop(p);
         }
-        {// 各种操作是否有内存问题
+        {
+            // 各种操作是否有内存问题
             let p = AtomicT::new(1);
             let value_load = p.load(Ordering::SeqCst).expect("");
             assert_eq!(1, *value_load.as_ref());

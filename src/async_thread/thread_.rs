@@ -31,12 +31,11 @@ mod test {
     fn fn_g_vec() -> &'static mut Vec<i32> {
         static ONE: Once = Once::new();
         static mut DATA: Cell<Option<Vec<i32>>> = Cell::new(None);
-        ONE.call_once(|| {
-            unsafe { DATA.set(Some(vec![0, 1, 2])); }
+        ONE.call_once(|| unsafe {
+            DATA.set(Some(vec![0, 1, 2]));
         });
         unsafe { DATA.get_mut() }.as_mut().expect("static is not init")
     }
-
 
     #[test]
     fn test_sync_send_has_race() {
@@ -53,9 +52,7 @@ mod test {
             }
         }
 
-        let d = Arc::new(Data {
-            c: Cell::new(0),
-        });
+        let d = Arc::new(Data { c: Cell::new(0) });
 
         let d2 = d.clone();
         let t2 = spawn(move || {
@@ -143,7 +140,6 @@ mod test {
         let md = Arc::get_mut(&mut d).unwrap();
         *md = 4;
 
-
         let d2 = d.clone();
         let t1 = spawn(move || {
             println!("{}", d2);
@@ -157,9 +153,7 @@ mod test {
         struct Handles {
             maps: BTreeMap<i32, String>,
         }
-        let mut arc = Arc::new(Handles {
-            maps: BTreeMap::new(),
-        });
+        let mut arc = Arc::new(Handles { maps: BTreeMap::new() });
         Arc::get_mut(&mut arc).expect("").maps.insert(0, "0".to_owned());
 
         let mut vec = Vec::new();

@@ -50,15 +50,14 @@ mod async_in_trait {
     use futures::executor::block_on;
     use futures::future::BoxFuture;
 
-//使用#[async_trait]是一个方法，这里不再举例，详细见 #[async_trait]自己的说明
+    //使用#[async_trait]是一个方法，这里不再举例，详细见 #[async_trait]自己的说明
 
     trait AsyncTrait {
-        fn f1<'a>(&mut self) -> Pin<Box<dyn Future<Output=i32> + Send + '_>>;
+        fn f1<'a>(&mut self) -> Pin<Box<dyn Future<Output = i32> + Send + '_>>;
     }
 
-
     impl AsyncTrait for String {
-        fn f1<'a>(&'a mut self) -> Pin<Box<dyn Future<Output=i32> + Send + 'a>> {
+        fn f1<'a>(&'a mut self) -> Pin<Box<dyn Future<Output = i32> + Send + 'a>> {
             // async fn run<'a >(_self: &'a mut String) -> i32 {
             //     println!("call run {}", _self);
             //     0
@@ -82,9 +81,7 @@ mod async_in_trait {
 
     impl AsyncTrait2 for i32 {
         fn f1<'a>(&'a self) -> BoxFuture<'a, i32> {
-            let f = |_self: &'a i32| async move {
-                *_self
-            };
+            let f = |_self: &'a i32| async move { *_self };
             // f(self).boxed()
             Box::pin(f(self)) //这个与上面的是一样的效果
         }
@@ -104,6 +101,3 @@ mod async_in_trait {
         println!("");
     }
 }
-
-
-

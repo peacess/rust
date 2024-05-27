@@ -1,5 +1,3 @@
-use tokio::runtime::Handle;
-
 fn main() {
     const MAX: u64 = 1000_000_000;
     let rt = tokio::runtime::Runtime::new().unwrap();
@@ -11,11 +9,11 @@ fn main() {
             sum += t;
         }
         let du = start.elapsed();
-        println!("sum: {} \n all: {}, t/s: {}", sum, du.as_nanos(),du.as_nanos()/MAX as u128);
+        println!("sum: {} \n all: {}, t/s: {}", sum, du.as_nanos(), du.as_nanos() / MAX as u128);
     });
 }
 
 #[inline(never)]
-async  fn add(c: u64) -> u64 {
+async fn add(c: u64) -> u64 {
     return c + 1;
 }

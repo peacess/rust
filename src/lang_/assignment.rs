@@ -62,7 +62,7 @@ fn test_assign() {
         /// []
         /// if the t impl Copy, the the [T;N] impl Copy
         let a = [1, 2, 3];
-        let mut b = a;// array impl the Copy trait
+        let mut b = a; // array impl the Copy trait
         b[0] = 5;
         println!("a:{:p}\nb:{:p}", &a, &b);
         println!("a: {:?}\nb:{:?}", a, b);
@@ -71,7 +71,7 @@ fn test_assign() {
             println!("{:?}", aa);
         };
         t(a);
-        t(a);// a impl the Copy trait, the parameter is a copy.
+        t(a); // a impl the Copy trait, the parameter is a copy.
         t(b);
     }
 }

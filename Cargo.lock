@@ -1203,9 +1203,9 @@ dependencies = [
 
 [[package]]
 name = "nolife"
-version = "0.3.3"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45ea516c86505253a39610c35397c62054f0627307a4599f2e952a1c213e391f"
+checksum = "546ca92b7a6d26fcad181abf0c4068f6a3c6556f1f0cfdd764ff06639a005b71"
 
 [[package]]
 name = "nom"

@@ -16,7 +16,7 @@ async fn zip_file(file_name: String, member_name: String, mut time_capsule: noli
 }
 
 struct ZipStreamer {
-    zip_scope: nolife::DynBoxScope<ZipFamily>,
+    zip_scope: nolife::BoxScope<ZipFamily>,
 }
 
 impl Read for ZipStreamer {
@@ -26,7 +26,14 @@ impl Read for ZipStreamer {
 }
 
 pub fn zip_streamer(file_name: String, member_name: String) -> impl std::io::Read {
-    let zip_scope = nolife::DynBoxScope::pin(|time_capsule| zip_file(file_name, member_name, time_capsule));
+    let zip_scope =
+        // freeze the scope in place, not closing it, and keeping the file borrowed
+        nolife::BoxScope::new_dyn(nolife::scope!({
+            let file = File::open(file_name).unwrap();
+            let mut archive = ZipArchive::new(file).unwrap();
+            let mut file = archive.by_name(&member_name).unwrap();
+            freeze_forever!(&mut file)
+        }));
     ZipStreamer { zip_scope }
 }
 

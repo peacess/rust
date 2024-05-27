@@ -7,7 +7,7 @@ description = "rust tool kits"
 repository = "https://github.com/peacess/rust"
 homepage = "https://github.com/peacess/rust"
 keywords = ["rust", "kits"]
-categories = ["kits"]
+categories = ["concurrency"]
 license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

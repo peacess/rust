@@ -29,7 +29,7 @@ futures-lite = "2.3.0"
 smol = "2.0.0"
 extreme = "666.666.666666"
 zip="2.1.0"
-nolife="0.3.3"
+nolife= "0.4.0"
 
 criterion = { version = "0.5.1", features = ["html_reports"] }
 

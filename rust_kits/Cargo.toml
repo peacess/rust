@@ -14,4 +14,4 @@ license = "Apache-2.0"
 
 [dependencies]
 atomic = "0.6.0"
-bytemuck = "1.14.3"
+bytemuck = "1.16.0"

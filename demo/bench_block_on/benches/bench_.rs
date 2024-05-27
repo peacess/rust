@@ -21,12 +21,42 @@ impl Future for SampleFuture {
 }
 
 /// see [block on](https://github.com/async-rs/async-task/blob/master/examples/block.rs)
-fn block_on<F: Future>(future: F) -> F::Output {
+fn block_on_old<F: Future>(future: F) -> F::Output {
     use std::cell::RefCell;
     use crossbeam::sync::Parker;
     use pin_utils::core_reexport::task::Waker;
 
     pin_utils::pin_mut!(future);
+
+    thread_local! {
+        static CACHE: RefCell<(Parker, Waker)> = {
+            let parker = Parker::new();
+            let unparker = parker.unparker().clone();
+            let waker = waker_fn::waker_fn(move || unparker.unpark());
+            RefCell::new((parker, waker))
+        };
+    }
+
+    CACHE.with(|cache| {
+        let (parker, waker) = &mut *cache.try_borrow_mut().ok()
+            .expect("recursive `block_on`");
+
+        let cx = &mut Context::from_waker(&waker);
+        loop {
+            match future.as_mut().poll(cx) {
+                Poll::Ready(output) => return output,
+                Poll::Pending => parker.park(),
+            }
+        }
+    })
+}
+
+fn block_on<F: Future>(future: F) -> F::Output {
+    use std::cell::RefCell;
+    use crossbeam::sync::Parker;
+    use std::task::Waker;
+
+    let mut future = std::pin::pin!(future);
 
     thread_local! {
         static CACHE: RefCell<(Parker, Waker)> = {
@@ -69,6 +99,9 @@ fn criterion_benchmark(c: &mut Criterion) {
     }));
     c.bench_function("futures_lite", |b| b.iter(|| {
         futures_lite::future::block_on(SampleFuture(TIMES));
+    }));
+    c.bench_function("directly code old", |b| b.iter(|| {
+        block_on_old(SampleFuture(TIMES));
     }));
     c.bench_function("directly code", |b| b.iter(|| {
         block_on(SampleFuture(TIMES));

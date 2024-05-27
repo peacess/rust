@@ -10,89 +10,67 @@ async-task有多个版：
 # rust async runtime 的 block on bench 测试结果
 
 速度比较（ns / op, 平均一次运行时间）  
-tokio time:   [118.44 ns 118.45 ns 118.46 ns]  
-smol time:   [117.41 ns 117.72 ns 118.06 ns]  
-futures time:   [29.487 ns 29.488 ns 29.488 ns]  
-async_std time:   [825.67 ns 826.50 ns 827.29 ns]  
-futures_lite time:   [22.708 ns 22.712 ns 22.717 ns]  
-directly code time:   [22.012 ns 22.019 ns 22.027 ns]  
-extreme time:   [229.79 ns 230.06 ns 230.34 ns]
-
+compare: /directly code time:   [7.3594 ns 7.3661 ns 7.3741 ns]
+compare: /futures_lite  time:   [7.8521 ns 7.8634 ns 7.8760 ns]
+compare: /futures_lite  time:   [7.8521 ns 7.8634 ns 7.8760 ns]
+compare: /futures       time:   [9.4864 ns 9.5082 ns 9.5285 ns]
+compare: /smol          time:   [23.145 ns 23.289 ns 23.414 ns]
+compare: /tokio         time:   [42.840 ns 42.870 ns 42.903 ns]
+compare: /extreme       time:   [257.14 ns 257.19 ns 257.25 ns]
+compare: /async_std     time:   [400.58 ns 400.94 ns 401.37 ns]
 其中 “directly code”是手动实现的block on
 
 下面是原始运行结果
 
 ```
-Benchmarking tokio
-Benchmarking tokio: Warming up for 3.0000 s
-Benchmarking tokio: Collecting 100 samples in estimated 5.0004 s (42M iterations)
-Benchmarking tokio: Analyzing
-tokio                   time:   [118.44 ns 118.45 ns 118.46 ns]
-                        change: [-0.0092% +0.0118% +0.0275%] (p = 0.23 > 0.05)
+compare: /directly code time:   [7.3594 ns 7.3661 ns 7.3741 ns]
+                        change: [-0.0613% +0.0334% +0.1431%] (p = 0.54 > 0.05)
                         No change in performance detected.
-Found 14 outliers among 100 measurements (14.00%)
-  1 (1.00%) low mild
-  10 (10.00%) high mild
-  3 (3.00%) high severe
-
-Benchmarking smol
-Benchmarking smol: Warming up for 3.0000 s
-Benchmarking smol: Collecting 100 samples in estimated 5.0003 s (43M iterations)
-Benchmarking smol: Analyzing
-smol                    time:   [117.41 ns 117.72 ns 118.06 ns]
-                        change: [+2.4784% +2.7855% +3.1111%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high mild
-
-Benchmarking futures
-Benchmarking futures: Warming up for 3.0000 s
-Benchmarking futures: Collecting 100 samples in estimated 5.0001 s (170M iterations)
-Benchmarking futures: Analyzing
-futures                 time:   [29.487 ns 29.488 ns 29.488 ns]
-                        change: [-96.857% -96.856% -96.854%] (p = 0.00 < 0.05)
-                        Performance has improved.
 Found 8 outliers among 100 measurements (8.00%)
-  2 (2.00%) low severe
   4 (4.00%) high mild
-  2 (2.00%) high severe
-
-Benchmarking async_std
-Benchmarking async_std: Warming up for 3.0000 s
-Benchmarking async_std: Collecting 100 samples in estimated 5.0010 s (6.0M iterations)
-Benchmarking async_std: Analyzing
-async_std               time:   [825.67 ns 826.50 ns 827.29 ns]
-                        change: [-80.519% -80.494% -80.471%] (p = 0.00 < 0.05)
+  4 (4.00%) high severe
+compare: /directly code old
+                        time:   [7.0844 ns 7.1204 ns 7.1606 ns]
+                        change: [-4.0969% -3.7097% -3.3420%] (p = 0.00 < 0.05)
                         Performance has improved.
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) low mild
-
-Benchmarking futures_lite
-Benchmarking futures_lite: Warming up for 3.0000 s
-Benchmarking futures_lite: Collecting 100 samples in estimated 5.0000 s (220M iterations)
-Benchmarking futures_lite: Analyzing
-futures_lite            time:   [22.708 ns 22.712 ns 22.717 ns]
-                        change: [-96.753% -96.751% -96.750%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 7 outliers among 100 measurements (7.00%)
+Found 21 outliers among 100 measurements (21.00%)
+  14 (14.00%) low severe
+  6 (6.00%) low mild
   1 (1.00%) high mild
-  6 (6.00%) high severe
-
-Benchmarking directly code
-Benchmarking directly code: Warming up for 3.0000 s
-Benchmarking directly code: Collecting 100 samples in estimated 5.0001 s (227M iterations)
-Benchmarking directly code: Analyzing
-directly code           time:   [22.012 ns 22.019 ns 22.027 ns]
-                        change: [-96.745% -96.744% -96.743%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 6 outliers among 100 measurements (6.00%)
-  3 (3.00%) high mild
+compare: /futures_lite  time:   [7.8521 ns 7.8634 ns 7.8760 ns]
+                        change: [-0.2787% -0.1348% +0.0128%] (p = 0.07 > 0.05)
+                        No change in performance detected.
+Found 10 outliers among 100 measurements (10.00%)
+  7 (7.00%) high mild
   3 (3.00%) high severe
+compare: /futures       time:   [9.4864 ns 9.5082 ns 9.5285 ns]
+                        change: [+0.0764% +0.6160% +1.1878%] (p = 0.03 < 0.05)
+                        Change within noise threshold.
+Found 21 outliers among 100 measurements (21.00%)
+  3 (3.00%) low severe
+  18 (18.00%) low mild
+compare: /smol          time:   [23.145 ns 23.289 ns 23.414 ns]
+                        change: [-0.1086% +0.2934% +0.7484%] (p = 0.17 > 0.05)
+                        No change in performance detected.
+Found 21 outliers among 100 measurements (21.00%)
+  1 (1.00%) high mild
+  20 (20.00%) high severe
+compare: /tokio         time:   [42.840 ns 42.870 ns 42.903 ns]
+                        change: [+4.1114% +4.2678% +4.3931%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+compare: /extreme       time:   [257.14 ns 257.19 ns 257.25 ns]
+                        change: [+3.3788% +3.4138% +3.4465%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+compare: /async_std     time:   [400.58 ns 400.94 ns 401.37 ns]
+                        change: [-11.625% -11.533% -11.441%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 12 outliers among 100 measurements (12.00%)
+  7 (7.00%) high mild
+  5 (5.00%) high severe
 
-Benchmarking extreme
-Benchmarking extreme: Warming up for 3.0000 s
-Benchmarking extreme: Collecting 100 samples in estimated 5.0001 s (22M iterations)
-Benchmarking extreme: Analyzing
-extreme                 time:   [229.79 ns 230.06 ns 230.34 ns]
-                        change: [-96.678% -96.618% -96.568%] (p = 0.00 < 0.05)
 ```

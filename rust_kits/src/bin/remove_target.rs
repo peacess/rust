@@ -18,20 +18,15 @@ fn main() {
 }
 
 fn remove_target(dir: &path::PathBuf, target: &str) -> Result<(), std::io::Error> {
-    for it in walkdir::WalkDir::new(dir).into_iter().filter_map(|it| {
+    for it in walkdir::WalkDir::new(dir).into_iter() {
         if let Ok(o) = it {
-            if target == o.path().file_name().expect("").to_str().expect("") {
-                Some(o)
-            } else {
-                None
+            let path = o.path();
+            if target == path.file_name().expect("").to_str().expect("") {
+                println!("removing : {:?}", path);
+                fs::remove_dir_all(path)?;
+                println!("removed : {:?}", path);
             }
-        } else {
-            None
         }
-    }) {
-        let path = it.path();
-        println!("path: {:?}", path);
-        fs::remove_dir_all(path)?;
     }
     Ok(())
 }

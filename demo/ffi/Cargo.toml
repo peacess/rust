@@ -1,0 +1,13 @@
+[package]
+name = "ffi"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+
+[build-dependencies]
+cc = "1.0.99"
+bindgen = "0.69.4"
+
+

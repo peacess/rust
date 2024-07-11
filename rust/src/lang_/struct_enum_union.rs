@@ -10,7 +10,7 @@ pub struct S1 {
     number: i32,
 }
 
-///
+/// s2
 pub struct S2(i32, i32);
 
 /// size of ： 8,  最大字段4 + 默认的discriminant 4 = 8

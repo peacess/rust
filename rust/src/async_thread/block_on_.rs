@@ -65,10 +65,10 @@ fn block_on_custom_cache<F: Future>(future: F) -> F::Output {
 
     CACHE.with(|cache| {
         // Panic if `block_on()` is called recursively.
-        let (parker, waker) = &mut *cache.try_borrow_mut().ok().expect("recursive `block_on`");
+        let (parker, waker) = &mut *cache.try_borrow_mut().expect("recursive `block_on`");
 
         // Create the task context.
-        let cx = &mut Context::from_waker(&waker);
+        let cx = &mut Context::from_waker(waker);
 
         // Keep polling the future until completion.
         loop {

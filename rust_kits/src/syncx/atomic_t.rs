@@ -40,9 +40,9 @@ impl<T> AtomicT<T> {
     pub fn load(&self, order: Ordering) -> Option<Arc<T>> {
         let temp = self.0.load(order);
         if temp.is_null() {
-            return None;
+            None
         } else {
-            return Some(unsafe { (*temp).clone() });
+            Some(unsafe { (*temp).clone() })
         }
     }
 
@@ -62,10 +62,10 @@ impl<T> AtomicT<T> {
         let ptr_data = Box::into_raw(Box::new(data));
         let temp = self.0.swap(ptr_data, order);
         if temp.is_null() {
-            return None;
+            None
         } else {
             let t = unsafe { Box::from_raw(temp) };
-            return Some(t.as_ref().clone());
+            Some(t.as_ref().clone())
         }
     }
 }

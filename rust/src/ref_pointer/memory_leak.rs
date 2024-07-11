@@ -1,5 +1,6 @@
 #[cfg(not(target_env = "msvc"))]
 use jemallocator::Jemalloc;
+use sysinfo::System;
 
 #[cfg(not(target_env = "msvc"))]
 #[global_allocator]
@@ -42,23 +43,25 @@ const FOR_LEN: i32 = 3;
 // hash map:    Statm { size: 4068, resident: 1056, share: 864, text: 694, data: 2669 }
 // hash map:    Statm { size: 4068, resident: 1056, share: 864, text: 694, data: 2669 }
 fn main() {
-    let memory = procinfo::pid::statm(std::process::id() as i32);
-    println!("             {:?}", memory.expect(""));
-    for _ in 0..FOR_LEN {
-        vector();
+    let mut sys = sysinfo::System::new_all();
+    if let Some(p) = sys.process(sysinfo::Pid::from(std::process::id() as usize)) {
+        println!("             {:?}", p.memory());
     }
     for _ in 0..FOR_LEN {
-        binary_heap();
+        vector(&mut sys);
     }
     for _ in 0..FOR_LEN {
-        btree_map();
+        binary_heap(&mut sys);
     }
     for _ in 0..FOR_LEN {
-        hash_map();
+        btree_map(&mut sys);
+    }
+    for _ in 0..FOR_LEN {
+        hash_map(&mut sys);
     }
 }
 
-fn vector() {
+fn vector(sys: &mut System) {
     for i in 0..FOR_1 {
         let mut data = Vec::new();
         for j in 0..FOR_2 {
@@ -67,11 +70,13 @@ fn vector() {
         }
         data.clear();
     }
-    let memory = procinfo::pid::statm(std::process::id() as i32);
-    println!("vec:         {:?}", memory.expect(""));
+    sys.refresh_all();
+    if let Some(p) = sys.process(sysinfo::Pid::from(std::process::id() as usize)) {
+        println!("vec:         {:?}", p.memory());
+    }
 }
 
-fn binary_heap() {
+fn binary_heap(sys: &mut System) {
     for i in 0..FOR_1 {
         let mut data = std::collections::BinaryHeap::new();
         for j in 0..FOR_2 {
@@ -80,11 +85,13 @@ fn binary_heap() {
         }
         data.clear();
     }
-    let memory = procinfo::pid::statm(std::process::id() as i32);
-    println!("binary heap: {:?}", memory.expect(""));
+    sys.refresh_all();
+    if let Some(p) = sys.process(sysinfo::Pid::from(std::process::id() as usize)) {
+        println!("binary heap: {:?}", p.memory());
+    }
 }
 
-fn btree_map() {
+fn btree_map(sys: &mut System) {
     for i in 0..FOR_1 {
         let mut data = std::collections::BTreeMap::new();
         for j in 0..FOR_2 {
@@ -93,11 +100,13 @@ fn btree_map() {
         }
         data.clear();
     }
-    let memory = procinfo::pid::statm(std::process::id() as i32);
-    println!("btree map:   {:?}", memory.expect(""));
+    sys.refresh_all();
+    if let Some(p) = sys.process(sysinfo::Pid::from(std::process::id() as usize)) {
+        println!("btree map:   {:?}", p.memory());
+    }
 }
 
-fn hash_map() {
+fn hash_map(sys: &mut System) {
     for i in 0..FOR_1 {
         let mut data = std::collections::HashMap::new();
         for j in 0..FOR_2 {
@@ -106,6 +115,8 @@ fn hash_map() {
         }
         data.clear();
     }
-    let memory = procinfo::pid::statm(std::process::id() as i32);
-    println!("hash map:    {:?}", memory.expect(""));
+    sys.refresh_all();
+    if let Some(p) = sys.process(sysinfo::Pid::from(std::process::id() as usize)) {
+        println!("hash map:    {:?}", p.memory());
+    }
 }

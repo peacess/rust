@@ -1,5 +1,5 @@
 fn main() {
-    const MAX: u64 = 1000_000_000;
+    const MAX: u64 = 1_000_000_000;
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.block_on(async {
         let start = std::time::Instant::now();
@@ -15,5 +15,5 @@ fn main() {
 
 #[inline(never)]
 async fn add(c: u64) -> u64 {
-    return c + 1;
+    c + 1
 }

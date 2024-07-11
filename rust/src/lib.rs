@@ -24,4 +24,5 @@ mod ref_pointer;
 mod trait_;
 
 mod args;
+mod generics_;
 mod macro_;

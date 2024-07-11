@@ -5,7 +5,7 @@
 //! ```
 //! use rust::doc_::Data;
 //!
-//! let modData = Data::new();
+//! let mod_data = Data::new_data();
 //! ```
 //!
 
@@ -16,9 +16,9 @@
 ///
 /// ```rust,editable
 /// use rust::doc_::Data;
-/// let data = Data::new();
+/// let data = Data::new_data();
 /// ```
-/// use the [`Data::new`]
+/// use the [`Data::new_data`]
 ///
 /// use 2 the [rust::doc_::Data]
 ///
@@ -37,7 +37,7 @@ pub struct Data {
 impl Data {
     /// new struct [Data]
     /// see the field [Data::name]
-    pub fn new() -> Self {
-        Data { name: "".to_owned() }
+    pub fn new_data() -> Self {
+        Data { name: String::new() }
     }
 }

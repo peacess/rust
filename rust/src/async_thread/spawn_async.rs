@@ -50,7 +50,7 @@ fn sample_error1_method1() {
         let v = mutex.lock().await;
         let _ = v;
         async {}.await;
-        println!("{}", "");
+        println!();
     });
 }
 
@@ -63,7 +63,7 @@ fn sample_error1_method2() {
             let _ = &v;
         }
         async {}.await;
-        println!("{}", "");
+        println!();
     });
 }
 

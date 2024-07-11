@@ -1,1 +1,1 @@
-mod closure_;
+mod closure_test;

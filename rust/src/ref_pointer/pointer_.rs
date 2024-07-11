@@ -533,6 +533,7 @@ mod test {
         #[allow(invalid_value)]
         let mut v: [i32; 64] = unsafe { MaybeUninit::uninit().assume_init() };
         let p = v.as_mut_ptr();
+        #[allow(forgetting_copy_types)]
         mem::forget(v);
         println!("MaybeUninit::uninit().assume_init() for [i32;64]: {:p}", p);
         //这里不能释放内存，因为v在stack上
@@ -540,6 +541,7 @@ mod test {
         // 这里的内存是stack上的，超出范围后会释放，所以小心不要把raw使用在｛｝外面
         let mut v: [i32; 64] = unsafe { mem::zeroed() }; // same MaybeUninit::zeroed().assume_init()
         let p = v.as_mut_ptr();
+        #[allow(forgetting_copy_types)]
         mem::forget(v);
         println!("mem::zeroed(): {:p}", p);
         //这里不能释放内存，因为v在stack上

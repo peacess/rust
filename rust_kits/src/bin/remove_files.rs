@@ -20,20 +20,17 @@ fn main() {
 
     if let Err(e) = remove_target(&p, &HashSet::from(["target", "node_modules"])) {
         println!("{}", e);
-        return;
     }
 }
 
 fn remove_target(dir: &path::PathBuf, target: &HashSet<&str>) -> Result<(), std::io::Error> {
-    for it in walkdir::WalkDir::new(dir).into_iter() {
-        if let Ok(o) = it {
-            let path = o.path();
-            let it_path = path.file_name().expect("").to_str().expect("");
-            if target.contains(it_path) {
-                println!("removing : {:?}", path);
-                fs::remove_dir_all(path)?;
-                println!("removed : {:?}", path);
-            }
+    for it in walkdir::WalkDir::new(dir).into_iter().flatten() {
+        let path = it.path();
+        let it_path = path.file_name().expect("").to_str().expect("");
+        if target.contains(it_path) {
+            println!("removing : {:?}", path);
+            fs::remove_dir_all(path)?;
+            println!("removed : {:?}", path);
         }
     }
     Ok(())

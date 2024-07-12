@@ -1,4 +1,5 @@
 use crate::syncx::AtomicT;
+use core::sync::atomic;
 use std::sync::Arc;
 
 #[derive(Debug)]
@@ -25,9 +26,9 @@ impl<T: bytemuck::NoUninit> AtomicRelaxed<atomic_g::Atomic<T>> {
     }
 }
 
-impl AtomicRelaxed<std::sync::atomic::AtomicBool> {
+impl AtomicRelaxed<atomic::AtomicBool> {
     pub fn new(t: bool) -> Self {
-        Self(std::sync::atomic::AtomicBool::new(t))
+        Self(atomic::AtomicBool::new(t))
     }
 
     pub fn get(&self) -> bool {
@@ -54,11 +55,11 @@ macro_rules! std_atomic {
             }
 
             pub fn get(&self) -> $v {
-                self.0.load(std::sync::atomic::Ordering::Relaxed)
+                self.0.load(atomic::Ordering::Relaxed)
             }
 
             pub fn set(&self, t: $v) {
-                self.0.store(t, std::sync::atomic::Ordering::Relaxed);
+                self.0.store(t, atomic::Ordering::Relaxed);
             }
             pub fn get_ordering(&self, ordering: atomic::Ordering) -> $v {
                 self.0.load(ordering)
@@ -70,20 +71,20 @@ macro_rules! std_atomic {
         }
     };
 }
-std_atomic!(std::sync::atomic::AtomicI8, i8);
-std_atomic!(std::sync::atomic::AtomicI16, i16);
-std_atomic!(std::sync::atomic::AtomicI32, i32);
-std_atomic!(std::sync::atomic::AtomicI64, i64);
-std_atomic!(std::sync::atomic::AtomicIsize, isize);
-std_atomic!(std::sync::atomic::AtomicU8, u8);
-std_atomic!(std::sync::atomic::AtomicU16, u16);
-std_atomic!(std::sync::atomic::AtomicU32, u32);
-std_atomic!(std::sync::atomic::AtomicU64, u64);
-std_atomic!(std::sync::atomic::AtomicUsize, usize);
+std_atomic!(atomic::AtomicI8, i8);
+std_atomic!(atomic::AtomicI16, i16);
+std_atomic!(atomic::AtomicI32, i32);
+std_atomic!(atomic::AtomicI64, i64);
+std_atomic!(atomic::AtomicIsize, isize);
+std_atomic!(atomic::AtomicU8, u8);
+std_atomic!(atomic::AtomicU16, u16);
+std_atomic!(atomic::AtomicU32, u32);
+std_atomic!(atomic::AtomicU64, u64);
+std_atomic!(atomic::AtomicUsize, usize);
 
-impl<T: bytemuck::NoUninit> AtomicRelaxed<std::sync::atomic::AtomicPtr<T>> {
+impl<T> AtomicRelaxed<atomic::AtomicPtr<T>> {
     pub fn new(t: *mut T) -> Self {
-        Self(std::sync::atomic::AtomicPtr::new(t))
+        Self(atomic::AtomicPtr::new(t))
     }
 
     pub fn get(&self) -> *mut T {
@@ -102,7 +103,7 @@ impl<T: bytemuck::NoUninit> AtomicRelaxed<std::sync::atomic::AtomicPtr<T>> {
     }
 }
 
-impl<T: bytemuck::NoUninit> AtomicRelaxed<AtomicT<T>> {
+impl<T> AtomicRelaxed<AtomicT<T>> {
     pub fn new(t: T) -> Self {
         Self(AtomicT::new(t))
     }

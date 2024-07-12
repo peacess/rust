@@ -68,6 +68,16 @@ impl<T> AtomicT<T> {
             Some(t.as_ref().clone())
         }
     }
+
+    #[inline]
+    pub fn set_null(&self, order: Ordering) -> Option<Arc<T>> {
+        let t = self.0.swap(ptr::null_mut(), order);
+        if t.is_null() {
+            None
+        } else {
+            Some(unsafe { (*t).clone() })
+        }
+    }
 }
 
 impl<T> Default for AtomicT<T> {

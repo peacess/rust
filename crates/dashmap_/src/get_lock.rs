@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod test {
-    use std::sync::Arc;
-    use std::time::Duration;
+    use std::{sync::Arc, time::Duration};
 
     use dashmap::DashMap;
 

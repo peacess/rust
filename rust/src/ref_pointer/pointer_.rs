@@ -1,13 +1,16 @@
 #[cfg(test)]
 mod test {
-    use std::alloc::{alloc, Layout};
-    use std::borrow::Cow;
-    use std::cell::RefCell;
-    use std::ffi::CString;
-    use std::fmt::{Formatter, Pointer};
-    use std::mem;
-    use std::mem::{ManuallyDrop, MaybeUninit};
-    use std::{fmt, ptr};
+    use std::{
+        alloc::{alloc, Layout},
+        borrow::Cow,
+        cell::RefCell,
+        ffi::CString,
+        fmt,
+        fmt::{Formatter, Pointer},
+        mem,
+        mem::{ManuallyDrop, MaybeUninit},
+        ptr,
+    };
 
     #[test]
     fn test_ptr() {
@@ -34,8 +37,7 @@ mod test {
 
     #[test]
     fn test_drop_in_place() {
-        use std::ptr;
-        use std::rc::Rc;
+        use std::{ptr, rc::Rc};
 
         let last = Rc::new(1);
         let weak = Rc::downgrade(&last);
@@ -150,9 +152,10 @@ mod test {
 
     #[test]
     fn test_raw_c_char() {
-        use std::mem::transmute;
-        use std::mem::ManuallyDrop;
-        use std::os::raw::c_char;
+        use std::{
+            mem::{transmute, ManuallyDrop},
+            os::raw::c_char,
+        };
         {
             let mut s = "".as_bytes().to_vec();
             s.push(0);

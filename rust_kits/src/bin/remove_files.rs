@@ -1,6 +1,6 @@
+use std::{collections::HashSet, fs, path};
+
 use clap::Parser;
-use std::collections::HashSet;
-use std::{fs, path};
 
 /// remove all target
 fn main() {

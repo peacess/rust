@@ -21,8 +21,7 @@ mod test {
     ///
     #[test]
     fn test() {
-        use std::any::Any;
-        use std::mem::transmute;
+        use std::{any::Any, mem::transmute};
 
         trait Parent {
             fn parent(&self) {

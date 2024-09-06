@@ -1,6 +1,10 @@
-use std::ptr;
-use std::sync::atomic::{AtomicPtr, Ordering};
-use std::sync::Arc;
+use std::{
+    ptr,
+    sync::{
+        atomic::{AtomicPtr, Ordering},
+        Arc,
+    },
+};
 
 /// AtomicT与　AtomicPtr：
 /// AtomicPtr：
@@ -100,9 +104,10 @@ impl<T> From<Arc<T>> for AtomicT<T> {
 
 #[cfg(test)]
 mod tests {
-    use std::mem;
-    use std::sync::atomic::Ordering;
-    use std::sync::Arc;
+    use std::{
+        mem,
+        sync::{atomic::Ordering, Arc},
+    };
 
     use crate::syncx::AtomicT;
 

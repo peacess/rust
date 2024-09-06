@@ -1,6 +1,7 @@
-use std::future::Future;
-use std::task::Waker;
-use std::task::{Context, Poll};
+use std::{
+    future::Future,
+    task::{Context, Poll, Waker},
+};
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use crossbeam::sync::Parker;

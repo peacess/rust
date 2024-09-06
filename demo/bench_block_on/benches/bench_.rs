@@ -1,6 +1,8 @@
-use std::future::Future;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use std::{
+    future::Future,
+    pin::Pin,
+    task::{Context, Poll},
+};
 
 use criterion::{criterion_group, criterion_main, Criterion};
 
@@ -22,9 +24,9 @@ impl Future for SampleFuture {
 
 /// see [block on](https://github.com/async-rs/async-task/blob/master/examples/block.rs)
 fn block_on<F: Future>(future: F) -> F::Output {
+    use std::{cell::RefCell, task::Waker};
+
     use crossbeam::sync::Parker;
-    use std::cell::RefCell;
-    use std::task::Waker;
 
     let mut future = std::pin::pin!(future);
 

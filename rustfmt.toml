@@ -2,8 +2,13 @@
 comment_width = 160
 max_width = 160
 
+merge_derives = false
+imports_granularity="Crate"
+group_imports = "StdExternalCrate"
+
 ignore = [
-    "target/*",
-    ".idea/*",
-    ".vscode"
+    "target",
+    ".idea",
+    ".vscode",
+    ".config"
 ]

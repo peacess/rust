@@ -14,6 +14,7 @@ libc = "0.2.158"
 sysinfo = "0.31.4"
 
 crossbeam-channel = "0.5.13"
+kanal = "0.1.0-pre8"
 
 futures = "0.3.30"
 crossbeam = "0.8.4"
@@ -44,6 +45,10 @@ name = "memory_leak"
 path = "src/ref_pointer/memory_leak.rs"
 
 [[bin]]
+name = "tokio_spawn"
+path = "src/async_thread/performe/spawn_time.rs"
+
+[[bin]]
 name = "thread_async"
 path = "src/async_thread/performe/thread_async.rs"
 
@@ -51,7 +56,14 @@ path = "src/async_thread/performe/thread_async.rs"
 name = "thread_fn"
 path = "src/async_thread/performe/thread_fn.rs"
 
+[[bin]]
+name = "channel"
+path = "src/async_thread/performe/channel_time.rs"
+harness = false
+
+
 [[bench]]
 name = "bench_block_on"
 path = "src/async_thread/block_on_.rs"
 harness = false
+

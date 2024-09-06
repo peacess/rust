@@ -1,5 +1,4 @@
-use std::sync::atomic;
-use std::sync::atomic::AtomicBool;
+use std::sync::{atomic, atomic::AtomicBool};
 
 trait OrderRelaxed {
     type Item;

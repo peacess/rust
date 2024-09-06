@@ -1,5 +1,5 @@
 fn main() {
-    const MAX: u64 = 1_000_000_000;
+    const MAX: u64 = 1_000_000;
     let t = std::thread::spawn(|| {
         let start = std::time::Instant::now();
         let mut sum = 0;
@@ -8,7 +8,9 @@ fn main() {
             sum += t;
         }
         let du = start.elapsed();
-        println!("sum: {} \n all: {}, t/s: {}", sum, du.as_nanos(), du.as_nanos() / MAX as u128);
+        // sum: 500000500000
+        // all: 14888836, ns/op: 14
+        println!("sum: {} \n all: {}, ns/op: {}", sum, du.as_nanos(), du.as_nanos() / MAX as u128);
     });
     let _ = t.join();
 }

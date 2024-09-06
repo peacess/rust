@@ -2,8 +2,10 @@
 mod test {
     #![allow(unused_variables)]
 
-    use std::cell::{Cell, UnsafeCell};
-    use std::sync::Once;
+    use std::{
+        cell::{Cell, UnsafeCell},
+        sync::Once,
+    };
 
     use lazy_static::lazy_static;
     use static_init::dynamic;

@@ -1,8 +1,12 @@
 #[cfg(test)]
 mod test {
-    use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-    use std::sync::{Arc, Barrier};
-    use std::thread;
+    use std::{
+        sync::{
+            atomic::{AtomicBool, AtomicUsize, Ordering},
+            Arc, Barrier,
+        },
+        thread,
+    };
 
     #[test]
     fn test_relaxed() {
@@ -79,10 +83,14 @@ mod test {
     /// [see](https://riptutorial.com/rust/example/21259/atomics-and-memory-ordering)
     #[cfg(test)]
     mod test_relaxed {
-        use std::cell::UnsafeCell;
-        use std::sync::atomic::{AtomicUsize, Ordering};
-        use std::sync::{Arc, Barrier};
-        use std::thread;
+        use std::{
+            cell::UnsafeCell,
+            sync::{
+                atomic::{AtomicUsize, Ordering},
+                Arc, Barrier,
+            },
+            thread,
+        };
 
         struct UsizePair {
             atom: AtomicUsize,
@@ -180,10 +188,12 @@ mod test {
 
     #[cfg(test)]
     mod test2 {
-        use std::sync::atomic::{fence, AtomicBool, Ordering};
         /// [see](https://github.com/freepeace/code_styles/blob/master/atomic_volatile_order-cn.md)
         use std::sync::Arc;
-        use std::thread;
+        use std::{
+            sync::atomic::{fence, AtomicBool, Ordering},
+            thread,
+        };
 
         #[test]
         fn test_atomic_volatile_order() {

@@ -44,11 +44,9 @@ mod wrap_struct {
 /// [see](https://blog.theincredibleholk.org/blog/2022/04/18/how-async-functions-in-traits-could-work-in-rustc/)
 #[cfg(test)]
 mod async_in_trait {
-    use std::future::Future;
-    use std::pin::Pin;
+    use std::{future::Future, pin::Pin};
 
-    use futures::executor::block_on;
-    use futures::future::BoxFuture;
+    use futures::{executor::block_on, future::BoxFuture};
 
     //使用#[async_trait]是一个方法，这里不再举例，详细见 #[async_trait]自己的说明
 

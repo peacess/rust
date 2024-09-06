@@ -2,10 +2,12 @@
 
 #[cfg(test)]
 mod test {
-    use std::cell::Cell;
-    use std::collections::BTreeMap;
-    use std::sync::{Arc, Mutex, Once};
-    use std::thread::spawn;
+    use std::{
+        cell::Cell,
+        collections::BTreeMap,
+        sync::{Arc, Mutex, Once},
+        thread::spawn,
+    };
 
     #[test]
     fn test_sync() {

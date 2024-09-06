@@ -1,5 +1,5 @@
 fn main() {
-    const MAX: u64 = 1_000_000_000;
+    const MAX: u64 = 1_000_000;
     let rt = tokio::runtime::Runtime::new().unwrap();
     rt.block_on(async {
         let start = std::time::Instant::now();
@@ -9,7 +9,9 @@ fn main() {
             sum += t;
         }
         let du = start.elapsed();
-        println!("sum: {} \n all: {}, t/s: {}", sum, du.as_nanos(), du.as_nanos() / MAX as u128);
+        // sum: 500000500000
+        // all: 23095663, ns/op: 23
+        println!("sum: {} \n all: {}, ns/op: {}", sum, du.as_nanos(), du.as_nanos() / MAX as u128);
     });
 }
 

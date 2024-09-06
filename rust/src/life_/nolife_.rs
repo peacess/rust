@@ -40,8 +40,9 @@ pub fn zip_streamer(file_name: String, member_name: String) -> impl std::io::Rea
 
 #[cfg(test)]
 mod test {
-    use crate::life_::nolife_::zip_streamer;
     use std::{fs::File, io::Read};
+
+    use crate::life_::nolife_::zip_streamer;
     #[test]
     #[should_panic]
     fn test_run() {

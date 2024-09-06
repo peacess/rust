@@ -1,6 +1,7 @@
-use crate::syncx::AtomicT;
 use core::sync::atomic;
 use std::sync::Arc;
+
+use crate::syncx::AtomicT;
 
 #[derive(Debug)]
 pub struct AtomicRelaxed<T>(pub T);

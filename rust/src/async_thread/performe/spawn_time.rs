@@ -8,8 +8,7 @@ fn main() {
             tokio::spawn(async {});
         }
         let du = start.elapsed();
-        // tokio::spawn: 2731567794, ns/op: 2731
-        println!("tokio::spawn: {}, ns/op: {}", du.as_nanos(), du.as_nanos() / MAX as u128);
+        // tokio::spawn: 1582 (ns/op)
+        println!("tokio::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
     }
-    {}
 }

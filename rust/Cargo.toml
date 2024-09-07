@@ -16,6 +16,7 @@ sysinfo = "0.31.4"
 crossbeam-channel = "0.5.13"
 kanal = "0.1.0-pre8"
 
+parking_lot = "0.12.3"
 futures = "0.3.30"
 crossbeam = "0.8.4"
 async-task = "4.7.1"
@@ -48,20 +49,21 @@ name = "memory_leak"
 path = "src/ref_pointer/memory_leak.rs"
 
 [[bin]]
-name = "tokio_spawn"
+name = "spawn_time"
 path = "src/async_thread/performe/spawn_time.rs"
 
 [[bin]]
-name = "thread_async"
-path = "src/async_thread/performe/thread_async.rs"
-
-[[bin]]
-name = "thread_fn"
-path = "src/async_thread/performe/thread_fn.rs"
+name = "fn_async"
+path = "src/async_thread/performe/fn_async.rs"
 
 [[bin]]
 name = "channel"
 path = "src/async_thread/performe/channel_time.rs"
+harness = false
+
+[[bin]]
+name = "lock"
+path = "src/async_thread/performe/lock_notify.rs"
 harness = false
 
 

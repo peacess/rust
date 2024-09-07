@@ -1684,6 +1684,7 @@ dependencies = [
  "nolife",
  "num_cpus",
  "once_cell",
+ "parking_lot 0.12.3",
  "pin-utils",
  "smol",
  "static_init",

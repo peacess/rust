@@ -2,9 +2,9 @@ fn main() {
     const MAX: u64 = 1_000_000;
     {
         let rt = tokio::runtime::Runtime::new().unwrap();
-        let t = rt.enter();
+        let _t = rt.enter();
         let start = std::time::Instant::now();
-        for i in 0..MAX {
+        for _i in 0..MAX {
             tokio::spawn(async {});
         }
         let du = start.elapsed();

@@ -21,7 +21,7 @@ crossbeam = "0.8.4"
 async-task = "4.7.1"
 waker-fn = "1.2.0"
 pin-utils = "0.1.0"
-async-std = "1.12.0"
+async-std = "1.13.0"
 futures-lite = "2.3.0"
 smol = "2.0.1"
 extreme = "666.666.666666"
@@ -35,6 +35,9 @@ jemallocator = "0.5.4"
 
 [dev-dependencies]
 futures-io = "0.3.30"
+
+[features]
+unstable = []
 
 [[bin]]
 name = "http_"

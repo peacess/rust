@@ -1,7 +1,5 @@
 #[cfg(test)]
 mod test {
-    #![cfg_attr(feature = "unstable", feature(ptr_metadata))]
-
     use std::ptr::null;
     #[cfg(feature = "unstable")]
     use std::ptr::{metadata, Pointee};

@@ -1,18 +1,28 @@
 fn main() {
-    // std::sync::mpsc::sync_channel: 33 (ns/op)
-    // std::sync::mpsc::channel: 40 (ns/op)
-    // kanal::bounded: 29 (ns/op)
-    // kanal::unbounded: 29 (ns/op)
-    // kanal::bounded_async: 70 (ns/op)
+    // rust_kits::syncx::FastChannel: 30 (ns/op)
+    // std::sync::mpsc::sync_channel: 36 (ns/op)
+    // std::sync::mpsc::channel: 38 (ns/op)
+    // kanal::bounded: 31 (ns/op)
+    // kanal::unbounded: 31 (ns/op)
+    // kanal::bounded_async: 74 (ns/op)
     // kanal::unbounded_async: 73 (ns/op)
     // crossbeam_channel::bounded: 55 (ns/op)
-    // crossbeam_channel::unbounded: 55 (ns/op)
-    // tokio::sync::mpsc::channel: 229 (ns/op)
-    // tokio::sync::mpsc::unbounded_channel: 59 (ns/op)
-    // tokio::sync::watch::channel: 294 (ns/op)
-    // tokio::sync::broadcast::channel: 140 (ns/op)
+    // crossbeam_channel::unbounded: 59 (ns/op)
+    // tokio::sync::mpsc::channel: 232 (ns/op)
+    // tokio::sync::mpsc::unbounded_channel: 65 (ns/op)
+    // tokio::sync::watch::channel: 320 (ns/op)
+    // tokio::sync::broadcast::channel: 148 (ns/op)
 
     const MAX: u64 = 1_000_000;
+    {
+        let s = rust_kits::syncx::FastChannel::with_capacity(MAX as usize);
+        let start = std::time::Instant::now();
+        for _i in 0..MAX {
+            let _ = s.send_not_notify(0);
+        }
+        let du = start.elapsed();
+        println!("rust_kits::syncx::FastChannel: {} (ns/op)", du.as_nanos() / MAX as u128);
+    }
     {
         let (s, _r) = std::sync::mpsc::sync_channel(MAX as usize);
         let start = std::time::Instant::now();

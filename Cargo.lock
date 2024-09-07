@@ -1686,6 +1686,7 @@ dependencies = [
  "once_cell",
  "parking_lot 0.12.3",
  "pin-utils",
+ "rust_kits",
  "smol",
  "static_init",
  "sysinfo",
@@ -1701,6 +1702,7 @@ dependencies = [
  "atomic",
  "bytemuck",
  "clap",
+ "parking_lot 0.12.3",
  "walkdir",
 ]
 

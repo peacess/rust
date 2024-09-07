@@ -14,6 +14,7 @@ license = "Apache-2.0"
 
 [dependencies]
 atomic_g = { package = "atomic",  version = "0.6.0" }
+parking_lot = "0.12.3"
 bytemuck = "1.18.0"
 walkdir = "2.5.0"
 clap = { version = "4.5.17", features = ["derive"] }

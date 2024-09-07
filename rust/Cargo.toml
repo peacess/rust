@@ -31,6 +31,8 @@ nolife= "0.4.0"
 
 criterion = { version = "0.5.1", features = ["html_reports"] }
 
+rust_kits = {path = "../rust_kits"}
+
 [target.'cfg(not(target_env = "msvc"))'.dependencies]
 jemallocator = "0.5.4"
 

@@ -28,6 +28,7 @@ smol = "2.0.1"
 extreme = "666.666.666666"
 zip="2.2.0"
 nolife= "0.4.0"
+dashmap = "6.1.0"
 
 criterion = { version = "0.5.1", features = ["html_reports"] }
 
@@ -66,6 +67,11 @@ harness = false
 [[bin]]
 name = "lock"
 path = "src/async_thread/performe/lock_notify.rs"
+harness = false
+
+[[bin]]
+name = "data"
+path = "src/async_thread/performe/data.rs"
 harness = false
 
 

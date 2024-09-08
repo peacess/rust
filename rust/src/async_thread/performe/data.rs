@@ -1,5 +1,15 @@
 fn main() {
-    const MAX: u64 = 100_000_000;
+    // dashmap::DashMap:insert 781 (ns/op)
+    // dashmap::DashMap:get 483 (ns/op)
+    // dashmap::DashMap:get_mut 473 (ns/op)
+    // std::collections::HashMap:insert 622 (ns/op)
+    // std::collections::HashMap:get 404 (ns/op)
+    // std::collections::HashMap:get_mut 409 (ns/op)
+    // std::collections::BTreeMap:insert 963 (ns/op)
+    // std::collections::BTreeMap:get 581 (ns/op)
+    // std::collections::BTreeMap:get_mut 576 (ns/op)
+
+    const MAX: u64 = 100_000;
     {
         let map = dashmap::DashMap::new();
         {

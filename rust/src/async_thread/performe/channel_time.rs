@@ -18,7 +18,7 @@ fn main() {
         let s = rust_kits::syncx::FastChannel::with_capacity(MAX as usize);
         let start = std::time::Instant::now();
         for _i in 0..MAX {
-            let _ = s.send_not_notify(0);
+            s.send_not_notify(0);
         }
         let du = start.elapsed();
         println!("rust_kits::syncx::FastChannel: {} (ns/op)", du.as_nanos() / MAX as u128);

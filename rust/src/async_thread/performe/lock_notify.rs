@@ -7,7 +7,7 @@ fn main() {
     // parking_lot::Mutex/CondVar: 25 (ns/op)
     // notify one -- wait: 3030 (ns/op)
     //
-    const MAX: u64 = 1_000_00;
+    const MAX: u64 = 100_000;
     {
         let mutex = std::sync::Mutex::new(0);
         let start = std::time::Instant::now();

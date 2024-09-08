@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 
+#[derive(Default)]
 pub struct FastChannel<T> {
     mutex: parking_lot::Mutex<VecDeque<T>>,
     cond: parking_lot::Condvar,
@@ -35,9 +36,8 @@ impl<T> FastChannel<T> {
         let mut guard = self.mutex.lock();
         loop {
             let v = guard.pop_front();
-            match v {
-                Some(data) => return data,
-                None => {}
+            if let Some(data) = v {
+                return data;
             }
             self.cond.wait(&mut guard);
         }

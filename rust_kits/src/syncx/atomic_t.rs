@@ -10,6 +10,7 @@ use std::{
 /// AtomicPtr：
 /// 1. 无锁线程安全
 /// 2. 它不会管理其中的raw指针
+///
 /// AtomicT 优点：
 /// 1. 无锁线程安全（free lock）
 /// 2. 可以正确释放Ｔ对象 (free t)

@@ -9,7 +9,7 @@ fn main() {
     // std::collections::BTreeMap:get 581 (ns/op)
     // std::collections::BTreeMap:get_mut 576 (ns/op)
 
-    const MAX: u64 = 100_000;
+    const MAX: u64 = 10_000;
     {
         let map = dashmap::DashMap::new();
         {

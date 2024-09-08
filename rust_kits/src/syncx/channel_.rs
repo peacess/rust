@@ -42,6 +42,16 @@ impl<T> FastChannel<T> {
             self.cond.wait(&mut guard);
         }
     }
+    pub fn recv_all_take(&self) -> VecDeque<T> {
+        let mut guard = self.mutex.lock();
+        std::mem::take(&mut *guard)
+    }
+
+    pub fn recv_all_replace(&self) -> VecDeque<T> {
+        let mut guard = self.mutex.lock();
+        let cap = guard.capacity();
+        std::mem::replace(&mut *guard, VecDeque::with_capacity(cap))
+    }
 
     pub fn is_empty(&self) -> bool {
         self.mutex.lock().is_empty()

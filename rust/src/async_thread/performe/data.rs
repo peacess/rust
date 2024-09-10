@@ -9,7 +9,7 @@ fn main() {
     // std::collections::BTreeMap:get 581 (ns/op)
     // std::collections::BTreeMap:get_mut 576 (ns/op)
 
-    const MAX: u64 = 10_000;
+    const MAX: u64 = 1_000;
     {
         let map = dashmap::DashMap::new();
         {
@@ -90,6 +90,39 @@ fn main() {
             }
             let du = start.elapsed();
             println!("std::collections::BTreeMap:get_mut {} (ns/op)", du.as_nanos() / MAX as u128);
+        }
+        {
+            let mut ids_u32 = Vec::with_capacity(MAX as usize);
+            {
+                for key in 0..MAX {
+                    ids_u32.push(key);
+                }
+                ids_u32.sort();
+            }
+            let start = std::time::Instant::now();
+            for key in &ids_u32 {
+                let _ = ids_u32.binary_search(&key);
+            }
+            let du = start.elapsed();
+            println!("sorted vec get:  {} (ns/op)", du.as_nanos() / MAX as u128);
+        }
+        {
+            let a_data = std::sync::atomic::AtomicU64::new(0);
+            let start = std::time::Instant::now();
+            for key in 0..MAX {
+                a_data.store(key, std::sync::atomic::Ordering::Relaxed);
+            }
+            let du = start.elapsed();
+            println!("std::sync::atomic::AtomicU64:  {} (ns/op)", du.as_nanos() / MAX as u128);
+        }
+        {
+            let mut a_data = 0u64;
+            let start = std::time::Instant::now();
+            for key in 0..MAX {
+                a_data = key;
+            }
+            let du = start.elapsed();
+            println!("u64:  {} (ns/op)", du.as_nanos() / MAX as u128);
         }
     }
 }

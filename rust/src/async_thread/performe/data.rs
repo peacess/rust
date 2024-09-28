@@ -101,7 +101,7 @@ fn main() {
             }
             let start = std::time::Instant::now();
             for key in &ids_u32 {
-                let _ = ids_u32.binary_search(&key);
+                let _ = ids_u32.binary_search(key);
             }
             let du = start.elapsed();
             println!("sorted vec get:  {} (ns/op)", du.as_nanos() / MAX as u128);
@@ -116,10 +116,10 @@ fn main() {
             println!("std::sync::atomic::AtomicU64:  {} (ns/op)", du.as_nanos() / MAX as u128);
         }
         {
-            let mut a_data = 0u64;
+            let mut _a_data = 0u64;
             let start = std::time::Instant::now();
             for key in 0..MAX {
-                a_data = key;
+                _a_data = key;
             }
             let du = start.elapsed();
             println!("u64:  {} (ns/op)", du.as_nanos() / MAX as u128);

@@ -1,8 +1,8 @@
 [package]
 name = "rust_kits"
-version = "0.1.6"
-edition = "2021"
-authors = ["Andy <peacess@163.com>"]
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
 description = "rust tool kits"
 repository = "https://github.com/peacess/rust"
 homepage = "https://github.com/peacess/rust"
@@ -13,8 +13,17 @@ license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = { version = "0.4.22", features = ["max_level_debug", "release_max_level_info"] }
+anyhow = "1.0.89"
+#env_logger = "0.11.5"
 atomic_g = { package = "atomic",  version = "0.6.0" }
 parking_lot = "0.12.3"
 bytemuck = "1.18.0"
 walkdir = "2.5.0"
-clap = { version = "4.5.17", features = ["derive"] }
+clap = { version = "4.5.18", features = ["derive"] }
+# for generate ca self
+rcgen = { version = "0.13.1", features = ["pem", "x509-parser","aws_lc_rs"] }
+
+[[bin]]
+name = "generate_certificate"
+path = "src/bin/generate_certificate.rs"

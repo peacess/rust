@@ -358,7 +358,7 @@ version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b3ddc4a5b231dd6958b140ff3151b6412b3f4321fab354f399eec8f14b06df62"
 dependencies = [
- "bindgen",
+ "bindgen 0.69.4",
  "cc",
  "cmake",
  "dunce",
@@ -390,7 +390,7 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bench_block_on"
-version = "0.1.0"
+version = "0.1.7"
 dependencies = [
  "async-std",
  "criterion",
@@ -424,6 +424,26 @@ dependencies = [
  "shlex",
  "syn 2.0.79",
  "which",
+]
+
+[[package]]
+name = "bindgen"
+version = "0.70.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f49d8fed880d473ea71efb9bf597651e77201bdd4893efe54c9e5d65ae04ce6f"
+dependencies = [
+ "bitflags 2.6.0",
+ "cexpr",
+ "clang-sys",
+ "itertools 0.13.0",
+ "log",
+ "prettyplease",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "rustc-hash",
+ "shlex",
+ "syn 2.0.79",
 ]
 
 [[package]]
@@ -810,19 +830,6 @@ dependencies = [
 
 [[package]]
 name = "dashmap"
-version = "5.5.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "978747c1d849a7d2ee5e8adc0159961c48fb7e5db2f06af6723b80123bb53856"
-dependencies = [
- "cfg-if",
- "hashbrown",
- "lock_api",
- "once_cell",
- "parking_lot_core 0.9.10",
-]
-
-[[package]]
-name = "dashmap"
 version = "6.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5041cc499144891f3790297212f32a74fb938e5136a14943f338ef9e0ae276cf"
@@ -837,9 +844,9 @@ dependencies = [
 
 [[package]]
 name = "dashmap_"
-version = "0.1.0"
+version = "0.1.7"
 dependencies = [
- "dashmap 5.5.3",
+ "dashmap",
 ]
 
 [[package]]
@@ -979,9 +986,9 @@ checksum = "e8c02a5121d4ea3eb16a80748c74f5549a5665e4c21333c6098f283870fbdea6"
 
 [[package]]
 name = "ffi"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
- "bindgen",
+ "bindgen 0.70.1",
  "cc",
 ]
 
@@ -997,7 +1004,7 @@ dependencies = [
 
 [[package]]
 name = "fn_gen_trait_closure"
-version = "0.1.0"
+version = "0.1.7"
 dependencies = [
  "criterion",
 ]
@@ -1266,6 +1273,15 @@ name = "itertools"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -1864,14 +1880,14 @@ dependencies = [
 
 [[package]]
 name = "rust"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "async-std",
  "async-task",
  "criterion",
  "crossbeam",
  "crossbeam-channel",
- "dashmap 6.1.0",
+ "dashmap",
  "extreme",
  "futures",
  "futures-io",
@@ -1896,7 +1912,7 @@ dependencies = [
 
 [[package]]
 name = "rust_kits"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "anyhow",
  "atomic",
@@ -1904,6 +1920,7 @@ dependencies = [
  "clap",
  "log",
  "parking_lot 0.12.3",
+ "pem",
  "rcgen",
  "walkdir",
 ]

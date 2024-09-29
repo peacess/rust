@@ -23,7 +23,12 @@ walkdir = "2.5.0"
 clap = { version = "4.5.18", features = ["derive"] }
 # for generate ca self
 rcgen = { version = "0.13.1", features = ["pem", "x509-parser","aws_lc_rs"] }
+pem = "3.0.4"
 
 [[bin]]
 name = "generate_certificate"
 path = "src/bin/generate_certificate.rs"
+
+[[bin]]
+name = "show_certificate"
+path = "src/bin/show_certificate.rs"

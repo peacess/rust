@@ -1,7 +1,7 @@
 
 [workspace]
 resolver = "2"
-members = ["rust","rust_kits", "demo/bench_block_on", "demo/fn_gen_trait_closure", "crates/dashmap_", "demo/ffi"]
+members = ["rust","rust_kits", "demo/bench_block_on", "demo/fn_gen_trait_closure", "crates/dashmap_", "demo/ffi", "demo/extreme_performance"]
 
 [workspace.package]
 version = "0.1.7"

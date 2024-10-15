@@ -6,12 +6,5 @@ edition.workspace = true
 authors.workspace = true
 
 [dependencies]
-tokio = "1.40.0"
+tokio = { version = "1.40.0", features = ["full"] }
 core_affinity = "0.8.1"
-
-[dev-dependencies]
-criterion = { version = "0.5.1", features = ["html_reports"] }
-
-[[bench]]
-name = "bench_"
-harness = false

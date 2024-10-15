@@ -14,4 +14,4 @@ extreme single pc performance:
 4, log 代码中的日志也会使用不少时间，尽量使用条件编译，让不输出的日志level不编译到执行程序中  
 4, log will take a lot of time. use conditional compilation to remove it from the execution program.  
 5, 提炼并简化业务  
-6, simple business  
+5, simple business  

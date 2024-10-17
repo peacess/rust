@@ -12,11 +12,7 @@ fn affinity() {
     }
     static mut VEC_CORE: OnceCell<Vec<core_affinity::CoreId>> = OnceCell::new();
     unsafe {
-        VEC_CORE.get_or_init(|| {
-            let r = core_affinity::get_core_ids().unwrap();
-            // println!("{:?}", r);
-            r
-        });
+        VEC_CORE.get_or_init(|| core_affinity::get_core_ids().unwrap());
     }
     println!("current thread id {:?}", std::thread::current().id());
     let runtime = tokio::runtime::Builder::new_multi_thread()

@@ -6,12 +6,23 @@ fn main() {
     {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let _t = rt.enter();
-        let start = std::time::Instant::now();
-        for _i in 0..MAX {
-            tokio::spawn(async {});
+        {
+            let start = std::time::Instant::now();
+            for _i in 0..MAX {
+                tokio::spawn(async {});
+            }
+            let du = start.elapsed();
+            println!("tokio::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
         }
-        let du = start.elapsed();
-        println!("tokio::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
+        {
+            let start = std::time::Instant::now();
+            for _i in 0..MAX {
+                tokio::spawn(async {});
+            }
+            let du = start.elapsed();
+            println!("tokio::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
+        }
+        rt.shutdown_background();
     }
     {
         let start = std::time::Instant::now();
@@ -20,5 +31,21 @@ fn main() {
         }
         let du = start.elapsed();
         println!("std::thread::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
+    }
+    {
+        let start = std::time::Instant::now();
+        for _i in 0..MAX {
+            let _ = smol::spawn(async {});
+        }
+        let du = start.elapsed();
+        println!("smol::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
+    }
+    {
+        let start = std::time::Instant::now();
+        for _i in 0..MAX {
+            let _ = smol::spawn(async {});
+        }
+        let du = start.elapsed();
+        println!("smol::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
     }
 }

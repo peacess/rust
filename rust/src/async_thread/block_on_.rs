@@ -83,7 +83,7 @@ fn block_on_custom_cache<F: Future>(future: F) -> F::Output {
 
 fn criterion_benchmark(c: &mut Criterion) {
     let mut c = c.benchmark_group("compare: ");
-    const TIMES: i32 = 2;
+    // const TIMES: i32 = 2;
     let tokio_ = tokio::runtime::Runtime::new().expect("");
     let _ = &tokio_;
     c.bench_function("block_on_async_std", |b| {

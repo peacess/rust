@@ -1,9 +1,9 @@
-use std::{cell::OnceCell, thread::Thread};
+use std::{cell::RefCell, thread::Thread};
 
 #[derive(Debug)]
 pub struct ThreadTask<T> {
     mutex: parking_lot::Mutex<Vec<T>>,
-    thread: OnceCell<Thread>,
+    thread: RefCell<Option<Thread>>,
     capacity: usize,
 }
 
@@ -13,7 +13,7 @@ impl<T> ThreadTask<T> {
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             mutex: parking_lot::Mutex::new(Vec::with_capacity(capacity)),
-            thread: OnceCell::new(),
+            thread: RefCell::new(None),
             capacity,
         }
     }
@@ -21,7 +21,7 @@ impl<T> ThreadTask<T> {
     pub fn push(&self, task: T) {
         let mut tasks = self.mutex.lock();
         tasks.push(task);
-        if let Some(t) = self.thread.get() {
+        if let Some(t) = self.thread.borrow().as_ref() {
             t.unpark();
         }
     }
@@ -29,7 +29,7 @@ impl<T> ThreadTask<T> {
     pub fn pushes(&self, new_tasks: Vec<T>) {
         let mut tasks = self.mutex.lock();
         tasks.extend(new_tasks);
-        if let Some(t) = self.thread.get() {
+        if let Some(t) = self.thread.borrow().as_ref() {
             t.unpark();
         }
     }
@@ -52,7 +52,9 @@ impl<T> ThreadTask<T> {
     pub fn sync_run<F: Fn(Vec<T>) -> bool>(&self, handle: F) {
         {
             let _tasks = self.mutex.lock();
-            let _ = self.thread.set(std::thread::current());
+            if let Ok(mut t) = self.thread.try_borrow_mut() {
+                *t = Some(std::thread::current())
+            }
         }
 
         loop {
@@ -71,6 +73,10 @@ impl<T> ThreadTask<T> {
             }
             if !local.is_empty() {
                 if handle(local) {
+                    // set thread is none, because the thread exit
+                    if let Ok(mut t) = self.thread.try_borrow_mut() {
+                        *t = None
+                    }
                     return;
                 }
             }

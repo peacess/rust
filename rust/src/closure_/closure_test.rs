@@ -137,3 +137,32 @@ fn test_run() {
         let _ = value;
     }
 }
+
+#[test]
+fn test_closure_params() {
+    {
+        fn fn_once<T: Iterator<Item = u32>, F: Fn(T) -> ()>(data: T, f: F) {
+            f(data);
+        }
+
+        let data = vec![1u32, 2, 3];
+        fn_once(data.into_iter(), |items| {
+            for it in items {
+                println!("{}", it);
+            }
+        });
+    }
+
+    // {// compile error
+    //     fn fn_two<T: Iterator<Item = u32>, F: Fn(T) -> ()>(f: F) {
+    //         let data = vec![1u32, 2, 3];
+    //         f(data.into_iter());
+    //     }
+    //
+    //     fn_two(|items:std::vec::IntoIter<u32>| {
+    //         for it in items {
+    //             println!("{}", it);
+    //         }
+    //     });
+    // }
+}

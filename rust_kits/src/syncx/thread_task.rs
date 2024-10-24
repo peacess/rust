@@ -72,14 +72,12 @@ impl<T> Tasks<T> for ThreadTask<T> {
                     continue;
                 }
             }
-            if !local.is_empty() {
-                if handle(local) {
-                    // set thread is none, because the thread exit
-                    if let Ok(mut t) = self.thread.try_borrow_mut() {
-                        *t = None
-                    }
-                    return;
+            if !local.is_empty() && handle(local) {
+                // set thread is none, because the thread exit
+                if let Ok(mut t) = self.thread.try_borrow_mut() {
+                    *t = None
                 }
+                return;
             }
         }
     }

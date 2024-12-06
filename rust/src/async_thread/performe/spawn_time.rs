@@ -35,7 +35,7 @@ fn main() {
     {
         let start = std::time::Instant::now();
         for _i in 0..MAX {
-            let _ = smol::spawn(async {});
+            let _task = smol::spawn(async {});
         }
         let du = start.elapsed();
         println!("smol::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);
@@ -43,7 +43,7 @@ fn main() {
     {
         let start = std::time::Instant::now();
         for _i in 0..MAX {
-            let _ = smol::spawn(async {});
+            let _task = smol::spawn(async {});
         }
         let du = start.elapsed();
         println!("smol::spawn: {} (ns/op)", du.as_nanos() / MAX as u128);

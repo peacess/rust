@@ -10,9 +10,9 @@ struct LocalValue<'a, T> {
     phantom: PhantomData<&'a T>,
 }
 
-unsafe impl<'a, T> Send for LocalValue<'a, T> {}
+unsafe impl<T> Send for LocalValue<'_, T> {}
 
-impl<'a, T> LocalValue<'a, T> {
+impl<T> LocalValue<'_, T> {
     pub fn new(value: &T) -> Self {
         unsafe {
             Self {
@@ -23,7 +23,7 @@ impl<'a, T> LocalValue<'a, T> {
     }
 }
 
-impl<'a, T> Deref for LocalValue<'a, T> {
+impl<T> Deref for LocalValue<'_, T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
@@ -32,7 +32,7 @@ impl<'a, T> Deref for LocalValue<'a, T> {
 }
 
 thread_local! {
-    static COUNTER: AtomicUsize = AtomicUsize::new(1);
+    static COUNTER: AtomicUsize = const { AtomicUsize::new(1) };
 }
 
 #[test]

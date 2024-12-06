@@ -1,4 +1,4 @@
-use std::cell::{OnceCell, RefCell};
+use std::{cell::RefCell, sync::OnceLock};
 
 fn main() {
     affinity();
@@ -10,33 +10,27 @@ fn affinity() {
     thread_local! {
         static CU_CORE: RefCell<core_affinity::CoreId> = const { RefCell::new(core_affinity::CoreId { id: usize::MAX }) };
     }
-    static mut VEC_CORE: OnceCell<Vec<core_affinity::CoreId>> = OnceCell::new();
-    unsafe {
-        VEC_CORE.get_or_init(|| core_affinity::get_core_ids().unwrap());
-    }
+    static VEC_CORE: OnceLock<parking_lot::Mutex<Vec<core_affinity::CoreId>>> = OnceLock::new();
+    VEC_CORE.get_or_init(|| parking_lot::Mutex::new(core_affinity::get_core_ids().unwrap()));
     println!("current thread id {:?}", std::thread::current().id());
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(1)
         .max_blocking_threads(1)
         .on_thread_start(|| {
             println!("on_thread_start thread start {:?}", std::thread::current().id());
-            unsafe {
-                if let Some(core) = VEC_CORE.get_mut().unwrap().pop() {
-                    core_affinity::set_for_current(core);
-                    CU_CORE.with_borrow_mut(|c| {
-                        println!("CU_CORE {:?}", core);
-                        *c = core;
-                    });
-                }
+            if let Some(core) = VEC_CORE.get().unwrap().lock().pop() {
+                core_affinity::set_for_current(core);
+                CU_CORE.with_borrow_mut(|c| {
+                    println!("CU_CORE {:?}", core);
+                    *c = core;
+                });
             }
         })
         .on_thread_stop(|| {
             println!("on_thread_stop thread stop {:?}", std::thread::current().id());
             CU_CORE.with_borrow_mut(|c| {
                 if c.id != usize::MAX {
-                    unsafe {
-                        VEC_CORE.get_mut().unwrap().push(*c);
-                    }
+                    VEC_CORE.get().unwrap().lock().push(*c);
                     *c = core_affinity::CoreId { id: usize::MAX };
                 }
             });

@@ -9,12 +9,16 @@ fn main() {
         args.removes = ["target", "node_modules"].map(|it| it.to_string()).to_vec();
     }
     let p = {
-        match std::env::current_exe() {
-            Err(e) => {
-                println!("{}", e);
-                return;
+        if !args.path.is_empty() {
+            path::PathBuf::from(&args.path)
+        } else {
+            match std::env::current_exe() {
+                Err(e) => {
+                    println!("{}", e);
+                    return;
+                }
+                Ok(t) => t.parent().expect("").to_path_buf(),
             }
-            Ok(t) => t.parent().expect("").to_path_buf(),
         }
     };
 

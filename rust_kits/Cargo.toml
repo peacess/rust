@@ -14,13 +14,13 @@ license = "Apache-2.0"
 
 [dependencies]
 log = { version = "0.4.22", features = ["max_level_debug", "release_max_level_info"] }
-anyhow = "1.0.90"
+anyhow = "1.0.94"
 #env_logger = "0.11.5"
 atomic_g = { package = "atomic",  version = "0.6.0" }
 parking_lot = "0.12.3"
-bytemuck = "1.19.0"
+bytemuck = "1.20.0"
 walkdir = "2.5.0"
-clap = { version = "4.5.20", features = ["derive"] }
+clap = { version = "4.5.23", features = ["derive"] }
 # for generate ca self
 rcgen = { version = "0.13.1", features = ["pem", "x509-parser","aws_lc_rs"] }
 pem = "3.0.4"

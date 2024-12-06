@@ -75,8 +75,3 @@ path = "src/async_thread/performe/data.rs"
 harness = false
 
 
-[[bin]]
-name = "bench_block_on"
-path = "src/async_thread/block_on_.rs"
-harness = false
-

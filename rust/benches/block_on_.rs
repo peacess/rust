@@ -17,7 +17,14 @@ fn block_on_my<F: Future>(future: F) -> F::Output {
     let unparker = parker.unparker().clone();
     let waker = waker_fn::waker_fn(move || unparker.unpark());
     let cx = &mut Context::from_waker(&waker);
+    let max = 100;
+    let mut time = 0;
     loop {
+        if time >= max {
+            break;
+        } else {
+            time += 1;
+        }
         match future.as_mut().poll(cx) {
             Poll::Ready(output) => return output,
             Poll::Pending => parker.park(),

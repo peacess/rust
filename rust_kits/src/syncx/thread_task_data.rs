@@ -36,7 +36,32 @@ impl<T> Tasks<T> for ThreadTaskData<T> {
     }
 
     fn sync_run<F: Fn(Vec<T>) -> bool>(&self, _handle: F) {
-        todo!()
+        self.inner.sync_run(|tasks| {
+            let mut exit = false;
+            let mut nofity = false;
+            let vec_tasks = {
+                let mut vec = Vec::with_capacity(tasks.len());
+                for task in tasks {
+                    match task {
+                        TaskData::Exit => {
+                            exit = true;
+                        }
+                        TaskData::Data(data) => {
+                            vec.push(data);
+                        }
+                        TaskData::Notify => {
+                            nofity = true;
+                        }
+                    }
+                }
+                vec
+            };
+            let re = _handle(vec_tasks);
+            if !re && nofity {
+                _handle(vec![]);
+            }
+            exit || re
+        });
     }
 
     fn stop(&self) {

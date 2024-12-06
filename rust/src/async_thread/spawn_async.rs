@@ -2,7 +2,7 @@
 //! [See tokio::spawn](https://tokio.rs/tokio/tutorial/spawning)
 
 //! 请看下面的例子，可以自行编译看出错提示
-//! ``` rust
+//! ``` ignore
 //!  fn sample_error1(){
 //!      let mutex = std::sync::Mutex::<i32>::new(0);
 //!      tokio::spawn(async move {

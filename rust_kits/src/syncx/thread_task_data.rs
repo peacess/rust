@@ -82,10 +82,10 @@ impl<T> ThreadTaskData<T> {
 mod tests {
     use std::sync::Arc;
 
-    use crate::syncx::{Tasks, ThreadOption, ThreadTaskData};
+    use crate::syncx::{Tasks, ThreadTaskData};
 
     #[test]
-    fn test_thread_task() {
+    fn test_thread_task_data() {
         let thread_option = Arc::new(ThreadTaskData::<u32>::with_capacity(10));
         //just for test
         let sum_data = Arc::new(std::sync::atomic::AtomicU32::new(0));

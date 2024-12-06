@@ -4,7 +4,7 @@ mod test {
 
     use std::{
         cell::{Cell, UnsafeCell},
-        sync::Once,
+        sync::{Once, OnceLock},
     };
 
     use lazy_static::lazy_static;
@@ -38,54 +38,26 @@ mod test {
     static G_STRING: &str = "same string";
     // static G_DATA:GlobalData = GlobalData{name:"".to_owned()};
 
-    pub fn fn_g_string2() -> &'static String {
-        static ONE: Once = Once::new();
-        static mut DATA: Cell<Option<String>> = Cell::new(None);
-        ONE.call_once(|| unsafe {
-            DATA.set(Some("string fn_g_string2".to_owned()));
-        });
-        unsafe { DATA.get_mut() }.as_ref().expect("static is not init")
+    #[allow(static_mut_refs)]
+    pub unsafe fn fn_g_string2() -> &'static String {
+        // if run in multi-thread, use std::sync::OnceLock
+        static mut DATA: OnceLock<String> = OnceLock::new();
+        DATA.get_or_init(|| "string fn_g_string2".to_owned());
+        DATA.get_mut().expect("static is not init")
     }
 
-    pub fn fn_g_string3() -> &'static String {
-        static ONE: Once = Once::new();
-        static mut DATA: UnsafeCell<Option<String>> = UnsafeCell::new(None);
-        ONE.call_once(|| {
-            unsafe { *DATA.get() = Some("string fn_g_string3".to_owned()) };
-        });
-        unsafe { &*DATA.get() }.as_ref().expect("static is not init")
+    #[allow(static_mut_refs)]
+    pub unsafe fn fn_g_string3() -> &'static String {
+        // if run in multi-thread, use std::sync::OnceLock
+        static mut DATA: OnceLock<String> = OnceLock::new();
+        DATA.get_or_init(|| "string fn_g_string3".to_owned());
+        DATA.get().expect("static is not init")
     }
-
-    struct StaticData<T> {
-        _one: Once,
-        _data: UnsafeCell<Option<T>>,
-    }
-
-    #[allow(dead_code)]
-    impl<T> StaticData<T> {
-        pub const fn new() -> Self {
-            StaticData {
-                _one: Once::new(),
-                _data: UnsafeCell::new(None),
-            }
-        }
-
-        pub fn get<F: FnOnce() -> T>(&'static self, builder: F) -> &'static T {
-            self._one.call_once(|| unsafe {
-                *self._data.get() = Some(builder());
-            });
-            unsafe { &*self._data.get() }.as_ref().expect("static not init")
-        }
-    }
-
-    unsafe impl<T: Sync> Sync for StaticData<T> {}
-
-    unsafe impl<T: Sync> Send for StaticData<T> {}
 
     #[allow(dead_code)]
     fn demo_static_data() -> &'static String {
-        static S_DATA: StaticData<String> = StaticData::new();
-        S_DATA.get(|| "some string".to_owned())
+        static S_DATA: OnceLock<String> = OnceLock::new();
+        S_DATA.get_or_init(|| "some string".to_owned())
     }
 
     lazy_static! {

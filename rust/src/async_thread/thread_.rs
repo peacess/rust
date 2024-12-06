@@ -3,7 +3,7 @@
 #[cfg(test)]
 mod test {
     use std::{
-        cell::Cell,
+        cell::{Cell, OnceCell},
         collections::BTreeMap,
         sync::{Arc, Mutex, Once},
         thread::spawn,
@@ -11,14 +11,14 @@ mod test {
 
     #[test]
     fn test_sync() {
-        let v: &'static Vec<i32> = fn_g_vec();
+        let v: &'static Vec<i32> = unsafe { fn_g_vec() };
         println!("len: {}", v.len());
         let t = spawn(move || {
             let cap = v.capacity();
             println!("{}", v.len());
             // v.push(10);
         });
-        let v: &'static mut Vec<i32> = fn_g_vec();
+        let v: &'static mut Vec<i32> = unsafe { fn_g_vec() };
         v.push(10);
         let re = t.join();
         {
@@ -30,13 +30,12 @@ mod test {
         }
     }
 
-    fn fn_g_vec() -> &'static mut Vec<i32> {
-        static ONE: Once = Once::new();
-        static mut DATA: Cell<Option<Vec<i32>>> = Cell::new(None);
-        ONE.call_once(|| unsafe {
-            DATA.set(Some(vec![0, 1, 2]));
-        });
-        unsafe { DATA.get_mut() }.as_mut().expect("static is not init")
+    #[allow(static_mut_refs)]
+    unsafe fn fn_g_vec() -> &'static mut Vec<i32> {
+        // if run in multi-thread, use std::sync::OnceLock
+        static mut DATA: OnceCell<Vec<i32>> = OnceCell::new();
+        DATA.get_or_init(|| vec![0, 1, 2]);
+        DATA.get_mut().expect("static is not init")
     }
 
     #[test]

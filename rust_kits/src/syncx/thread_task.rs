@@ -96,35 +96,35 @@ mod tests {
 
     #[test]
     fn test_thread_task() {
-        // let thread_task = Arc::new(ThreadTask::<Option<u32>>::with_capacity(10));
-        // //just for test
-        // let sum_data = Arc::new(std::sync::atomic::AtomicU32::new(0));
-        //
-        // let thread_task_clone = thread_task.clone();
-        // let sum_data_clone = sum_data.clone();
-        // let join_handle = std::thread::spawn(move || {
-        //     thread_task_clone.sync_run(|tasks| {
-        //         for item in tasks {
-        //             if let Some(data) = item {
-        //                 sum_data_clone.fetch_add(data, std::sync::atomic::Ordering::Relaxed);
-        //             } else {
-        //                 return true;
-        //             }
-        //         }
-        //         false
-        //     });
-        // });
-        // thread_task.push(Some(1));
-        // std::thread::sleep(std::time::Duration::from_millis(100));
-        // assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 1);
-        // thread_task.push(Some(2));
-        // std::thread::sleep(std::time::Duration::from_millis(100));
-        // assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 3);
-        // thread_task.pushes(vec![Some(3), Some(4)]);
-        // std::thread::sleep(std::time::Duration::from_millis(100));
-        // assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 10);
-        // // the stop do not impl, instead of push none
-        // thread_task.push(None);
-        // join_handle.join().unwrap();
+        let thread_task = Arc::new(ThreadTask::<Option<u32>>::with_capacity(10));
+        //just for test
+        let sum_data = Arc::new(std::sync::atomic::AtomicU32::new(0));
+
+        let thread_task_clone = thread_task.clone();
+        let sum_data_clone = sum_data.clone();
+        let join_handle = std::thread::spawn(move || {
+            thread_task_clone.sync_run(|tasks| {
+                for item in tasks {
+                    if let Some(data) = item {
+                        sum_data_clone.fetch_add(data, std::sync::atomic::Ordering::Relaxed);
+                    } else {
+                        return true;
+                    }
+                }
+                false
+            });
+        });
+        thread_task.push(Some(1));
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 1);
+        thread_task.push(Some(2));
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 3);
+        thread_task.pushes(vec![Some(3), Some(4)]);
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        assert_eq!(sum_data.load(std::sync::atomic::Ordering::Relaxed), 10);
+        // the stop do not impl, instead of push none
+        thread_task.push(None);
+        join_handle.join().unwrap();
     }
 }

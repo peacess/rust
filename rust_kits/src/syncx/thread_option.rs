@@ -76,7 +76,7 @@ mod tests {
     use crate::syncx::{Tasks, ThreadOption};
 
     #[test]
-    fn test_thread_task() {
+    fn test_thread_option() {
         let thread_option = Arc::new(ThreadOption::<u32>::with_capacity(10));
         // //just for test
         let sum_data = Arc::new(std::sync::atomic::AtomicU32::new(0));

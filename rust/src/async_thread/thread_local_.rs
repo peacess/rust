@@ -1,4 +1,5 @@
 use std::{
+    cell::Cell,
     marker::PhantomData,
     ops::Deref,
     sync::atomic::{AtomicUsize, Ordering},
@@ -32,7 +33,7 @@ impl<T> Deref for LocalValue<'_, T> {
 }
 
 thread_local! {
-    static COUNTER: AtomicUsize = const { AtomicUsize::new(1) };
+    static COUNTER: Cell<i32> = const { Cell::new(1) };
 }
 
 #[test]
@@ -45,10 +46,10 @@ fn test_thread_local_value() {
         LocalValue::new(counter)
     });
 
-    let old = c.load(Ordering::Relaxed);
+    let old = c.get();
     assert_eq!(old, 1);
-    c.store(2, Ordering::Relaxed);
-    let new_value = c.load(Ordering::Relaxed);
+    c.set(2);
+    let new_value = c.get();
     assert_eq!(new_value, 2);
 
     let joined = run.spawn(async move {
@@ -59,13 +60,38 @@ fn test_thread_local_value() {
         });
         tokio::task::yield_now().await;
         async {}.await;
-        let old = c2.load(Ordering::Relaxed);
+        let old = c2.get();
         assert_eq!(old, 1);
-        c2.store(3, Ordering::Relaxed);
-        let new_value = c2.load(Ordering::Relaxed);
+        c2.set(3);
+        let new_value = c2.get();
         assert_eq!(new_value, 3);
     });
     run.block_on(joined);
-    let new_value = c.load(Ordering::Relaxed);
+    let new_value = c.get();
     assert_eq!(new_value, 2);
+    run.shutdown_background();
+}
+
+thread_local! {
+    static COUNTER_ASYNC: Cell<i32> = Cell::new(1);
+}
+
+#[test]
+fn test_thread_local_async() {
+    let run = tokio::runtime::Builder::new_multi_thread().build().unwrap();
+    run.enter();
+
+    let re = run.spawn(async move {
+        COUNTER_ASYNC.with(|counter| {
+            assert_eq!(counter.get(), 1);
+            // let _ = async {  }.await;
+            counter.set(2);
+        })
+    });
+    run.block_on(re);
+    COUNTER_ASYNC.with(|counter| {
+        assert_eq!(counter.get(), 1);
+    });
+
+    run.shutdown_background();
 }

@@ -6,6 +6,6 @@ edition.workspace = true
 authors.workspace = true
 
 [dependencies]
-tokio = { version = "1.42.0", features = ["full"] }
+tokio = { version = "1.43.0", features = ["full"] }
 core_affinity = "0.8.1"
 parking_lot = "0.12.3"

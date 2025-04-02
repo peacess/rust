@@ -43,6 +43,12 @@ impl<T> Tasks<T> for ThreadTask<T> {
         std::mem::swap(&mut cleaned, &mut tasks);
         cleaned
     }
+
+    fn swap_tasks(&self, t: &mut Vec<Self::InterType>) {
+        let mut tasks = self.mutex.lock();
+        std::mem::swap(t, &mut tasks);
+    }
+
     fn len(&self) -> usize {
         self.mutex.lock().len()
     }

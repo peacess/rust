@@ -6,6 +6,7 @@ pub trait Tasks<T> {
     fn push(&self, task: T);
     fn pushes(&self, new_tasks: Vec<T>);
     fn take_tasks(&self) -> Vec<Self::InterType>;
+    fn swap_tasks(&self, t: &mut Vec<Self::InterType>);
     fn len(&self) -> usize;
     fn is_empty(&self) -> bool;
     /// dead loop until the handle return true

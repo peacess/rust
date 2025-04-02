@@ -41,7 +41,7 @@ fn test_thread_local_value() {
     let run = tokio::runtime::Builder::new_multi_thread().build().unwrap();
     run.enter();
     let c = COUNTER.with(|counter| {
-        assert_eq!(counter.load(Ordering::Relaxed), 1);
+        assert_eq!(counter.get(), 1);
         println!("{:p}", counter);
         LocalValue::new(counter)
     });
@@ -54,7 +54,7 @@ fn test_thread_local_value() {
 
     let joined = run.spawn(async move {
         let c2 = COUNTER.with(|counter| {
-            assert_eq!(counter.load(Ordering::Relaxed), 1);
+            assert_eq!(counter.get(), 1);
             println!("{:p}", counter);
             LocalValue::new(counter)
         });

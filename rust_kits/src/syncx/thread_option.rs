@@ -28,6 +28,10 @@ impl<T> Tasks<T> for ThreadOption<T> {
         self.inner.take_tasks()
     }
 
+    fn swap_tasks(&self, t: &mut Vec<Self::InterType>) {
+        self.inner.swap_tasks(t);
+    }
+
     fn len(&self) -> usize {
         self.inner.len()
     }

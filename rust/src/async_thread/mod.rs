@@ -1,3 +1,5 @@
+mod app_async_a;
+mod app_async_b;
 mod async_trait_;
 mod life_;
 mod life_enum_struct;
@@ -5,5 +7,4 @@ mod order_;
 mod spawn_async;
 mod spawn_scope;
 mod thread_;
-
 mod thread_local_;

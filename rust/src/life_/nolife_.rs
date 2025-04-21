@@ -6,7 +6,7 @@ use zip::{read::ZipFile, ZipArchive};
 /// [nolife sample](https://blog.dureuill.net/articles/nolife-0-4/)
 struct ZipFamily;
 impl<'a> nolife::Family<'a> for ZipFamily {
-    type Family = ZipFile<'a>;
+    type Family = ZipFile<'a, File>;
 }
 
 async fn zip_file(file_name: String, member_name: String, mut time_capsule: nolife::TimeCapsule<ZipFamily>) -> nolife::Never {

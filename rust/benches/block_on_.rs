@@ -21,7 +21,7 @@ fn block_on_my<F: Future>(future: F) -> F::Output {
     let mut time = 0;
     loop {
         if time >= max {
-            break;
+            panic!("time limit exceeded");
         } else {
             time += 1;
         }

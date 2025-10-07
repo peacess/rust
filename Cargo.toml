@@ -7,3 +7,21 @@ members = ["rust","rust_kits", "demo/bench_block_on", "demo/fn_gen_trait_closure
 version = "0.1.8"
 edition = "2021"
 authors = ["Andy <peacess@163.com>"]
+
+[workspace.dependencies]
+log = { version = "0.4.28", features = ["max_level_debug", "release_max_level_info"] }
+env_logger = "0.11.8"
+anyhow = "1.0.100"
+criterion = { version = "0.7.0", features = ["html_reports"] }
+
+tokio = { version = "1.47.1", features = ["full"] }
+parking_lot = "0.12.5"
+async-std = "1.13.2"
+crossbeam = "0.8.4"
+futures = "0.3.31"
+futures-lite = "2.6.1"
+smol = "2.0.2"
+
+cc = "1.2.40"
+bindgen = "0.72.1"
+

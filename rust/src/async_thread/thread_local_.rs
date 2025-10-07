@@ -73,7 +73,7 @@ fn test_thread_local_value() {
 }
 
 thread_local! {
-    static COUNTER_ASYNC: Cell<i32> = Cell::new(1);
+    static COUNTER_ASYNC: Cell<i32> = const { Cell::new(1) };
 }
 
 #[test]

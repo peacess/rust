@@ -27,4 +27,8 @@ Features:
       -h, --help                   Print help
       -V, --version                Print version
    ```
+    * show certificate
+   ```shell
+      cargo run --bin=show_certificate  -- -h
+   ```
     * other

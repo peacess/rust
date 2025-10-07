@@ -20,7 +20,7 @@ fn best_slice_to_array() {
 
 #[inline]
 unsafe fn slice_to_array_unchecked<T, const N: usize>(slice: &[T]) -> &[T; N] {
-    std::mem::transmute::<_, &[T; N]>(slice.as_ptr())
+    &*slice.as_ptr().cast::<[T; N]>()
 }
 
 #[inline]
@@ -28,7 +28,7 @@ fn slice_to_array<T, const N: usize>(slice: &[T]) -> Option<&[T; N]> {
     if slice.len() != N {
         None
     } else {
-        unsafe { Some(std::mem::transmute::<_, &[T; N]>(slice.as_ptr())) }
+        unsafe { Some(&*slice.as_ptr().cast::<[T; N]>()) }
     }
 }
 

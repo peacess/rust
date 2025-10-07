@@ -1,8 +1,8 @@
 use std::{env, fs, path};
 
 use clap::Parser;
-use rcgen::CertificateParams;
-
+use rcgen::{CertificateParams, KeyPair};
+use x509_parser::prelude::{FromDer, X509Certificate};
 fn main() {
     let re = || -> Result<_, anyhow::Error> {
         let cli_args = CliArgs::parse();
@@ -14,15 +14,44 @@ fn main() {
             if path.is_file() {
                 if let Some(ext) = path.extension() {
                     if ext == "pem" || ext == "PEM" {
-                        let pem = fs::read_to_string(path.clone())?;
-                        if let Ok(params) = CertificateParams::from_ca_cert_pem(&pem) {
-                            let out_file = output.join(path.file_name().unwrap());
-                            if out_file.exists() {
-                                fs::remove_file(out_file.clone())?;
+                        let pem_string = fs::read_to_string(path.clone())?;
+                        // match CertificateSigningRequestParams::from_pem(&pem_string) {
+                        //     Ok(params) => {
+                        //         let out_file = output.join(path.file_name().unwrap());
+                        //         if out_file.exists() {
+                        //             fs::remove_file(out_file.clone())?;
+                        //         }
+                        //         let mut out = fs::File::create(out_file)?;
+                        //         write_cert(&mut out, &params.params)?;
+                        //         continue;
+                        //     }
+                        //     Err(e) => {
+                        //         eprintln!("Error: {}", e);
+                        //     }
+                        // }
+                        let pem_data = pem::parse(&pem_string)?;
+                        match X509Certificate::from_der(pem_data.contents()) {
+                            Ok((_rem, cert)) => {
+                                let out_file = output.join(path.file_name().unwrap());
+                                if out_file.exists() {
+                                    fs::remove_file(out_file.clone())?;
+                                }
+                                let mut out = fs::File::create(out_file)?;
+                                write_x509_cert(&mut out, &cert)?;
                             }
-                            let mut out = fs::File::create(out_file)?;
-                            write_cert(&mut out, &params)?;
-                            continue;
+                            Err(e) => match KeyPair::from_pem(&pem_string) {
+                                Ok(key_pair) => {
+                                    let out_file = output.join(path.file_name().unwrap());
+                                    if out_file.exists() {
+                                        fs::remove_file(out_file.clone())?;
+                                    }
+                                    let mut out = fs::File::create(out_file)?;
+                                    write_key_pair(&mut out, &key_pair)?;
+                                }
+                                Err(e2) => {
+                                    println!("Failed to parse certificate or key: {}:{}", e, e2);
+                                }
+                            },
                         }
                     }
                 }
@@ -74,6 +103,7 @@ impl CliArgs {
     }
 }
 
+#[allow(dead_code)]
 fn write_cert<W: std::io::Write>(writer: &mut W, cert: &CertificateParams) -> Result<(), anyhow::Error> {
     let s = format!(
         "{}\n{}\n{}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{:?}\n{}\n{:?}\n",
@@ -92,6 +122,42 @@ fn write_cert<W: std::io::Write>(writer: &mut W, cert: &CertificateParams) -> Re
         cert.key_identifier_method,
     );
 
+    writer.write_all(s.as_bytes())?;
+    Ok(())
+}
+
+fn write_x509_cert<W: std::io::Write>(writer: &mut W, cert: &X509Certificate) -> Result<(), anyhow::Error> {
+    let mut s = format!(
+        "Issuer: {}\nSubject: {}\nNot Before: {}\nNot After: {}\nSerial Number: {}\nis ca: {}\n{:?}\n{:?}\n{:?}\n",
+        cert.issuer,
+        cert.subject,
+        cert.tbs_certificate.validity.not_before.to_datetime(),
+        cert.tbs_certificate.validity.not_after.to_datetime(),
+        cert.serial,
+        cert.is_ca(),
+        cert.key_usage(),
+        cert.extended_key_usage(),
+        cert.name_constraints(),
+    );
+
+    if let Ok(Some(ext)) = cert.subject_alternative_name() {
+        s.push_str("Subject Alternative Names (SANs):\n");
+        for name in ext.value.general_names.iter() {
+            s.push_str(&format!("  - {}", name));
+        }
+        s.push('\n');
+    }
+
+    writer.write_all(s.as_bytes())?;
+    Ok(())
+}
+
+fn write_key_pair<W: std::io::Write>(writer: &mut W, key_pair: &KeyPair) -> Result<(), anyhow::Error> {
+    let s = format!(
+        "{:?}\nkey: {}\n",
+        key_pair,
+        key_pair.serialized_der().iter().map(|x| format!("{:02X}", x)).collect::<String>(),
+    );
     writer.write_all(s.as_bytes())?;
     Ok(())
 }

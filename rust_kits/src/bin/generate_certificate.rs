@@ -2,7 +2,7 @@ use std::{collections::HashMap, env, fs, io::Write, path, path::Path};
 
 use clap::{Parser, ValueEnum};
 use rcgen::{
-    BasicConstraints, CertificateParams, CertifiedKey, DistinguishedName, DnType, ExtendedKeyUsagePurpose, IsCa, KeyPair, KeyUsagePurpose, SignatureAlgorithm,
+    BasicConstraints, CertificateParams, DistinguishedName, DnType, ExtendedKeyUsagePurpose, IsCa, Issuer, KeyPair, KeyUsagePurpose, SignatureAlgorithm,
 };
 use rust_kits::logger;
 
@@ -13,7 +13,7 @@ fn main() {
         let cli_args = CliArgs::parse().init();
         let output = cli_args.output_path()?;
 
-        let ca = {
+        let (_ca, issuer, ca_params) = {
             let mut ca_params = CertificateParams::default();
             ca_params.distinguished_name = DistinguishedName::new();
             ca_params.distinguished_name.push(DnType::CountryName, "*");
@@ -31,13 +31,13 @@ fn main() {
             let cert = ca_params.self_signed(&key_pair)?;
             make_file("ca_key.pem", key_pair.serialize_pem().as_bytes(), &output)?;
             make_file("ca_cert.pem", cert.pem().as_bytes(), &output)?;
-            CertifiedKey { cert, key_pair }
+            (cert, Issuer::new(ca_params.clone(), key_pair), ca_params)
         };
 
         // client
         {
             let mut params = CertificateParams::default();
-            for it in ca.cert.params().distinguished_name.iter() {
+            for it in ca_params.distinguished_name.iter() {
                 if *it.0 != DnType::CommonName {
                     params.distinguished_name.push(it.0.clone(), it.1.clone());
                 }
@@ -46,8 +46,8 @@ fn main() {
             params.key_usages.push(KeyUsagePurpose::DigitalSignature);
             params.extended_key_usages.push(ExtendedKeyUsagePurpose::ServerAuth);
             params.is_ca = IsCa::NoCa;
-            params.not_after = ca.cert.params().not_after;
-            params.not_before = ca.cert.params().not_before;
+            params.not_after = ca_params.not_after;
+            params.not_before = ca_params.not_before;
 
             for name in &cli_args.dns_names {
                 let mut one = params.clone();
@@ -55,7 +55,7 @@ fn main() {
                 one.subject_alt_names = vec![rcgen::SanType::DnsName(name.clone().try_into()?)];
 
                 let key_pair = KeyPair::generate_for(cli_args.algorithm.get())?;
-                let cert = one.signed_by(&key_pair, &ca.cert, &ca.key_pair)?;
+                let cert = one.signed_by(&key_pair, &issuer)?;
 
                 make_file(&format!("{}_key.pem", name), key_pair.serialize_pem().as_bytes(), &output)?;
                 make_file(&format!("{}_cert.pem", name), cert.pem().as_bytes(), &output)?;

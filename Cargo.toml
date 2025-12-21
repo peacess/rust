@@ -9,12 +9,12 @@ edition = "2021"
 authors = ["Andy <peacess@163.com>"]
 
 [workspace.dependencies]
-log = { version = "0.4.28", features = ["max_level_debug", "release_max_level_info"] }
+log = { version = "0.4.29", features = ["max_level_debug", "release_max_level_info"] }
 env_logger = "0.11.8"
 anyhow = "1.0.100"
 criterion = { version = "0.7.0", features = ["html_reports"] }
 
-tokio = { version = "1.47.1", features = ["full"] }
+tokio = { version = "1.48.0", features = ["full"] }
 parking_lot = "0.12.5"
 async-std = "1.13.2"
 crossbeam = "0.8.4"
@@ -22,6 +22,6 @@ futures = "0.3.31"
 futures-lite = "2.6.1"
 smol = "2.0.2"
 
-cc = "1.2.40"
+cc = "1.2.50"
 bindgen = "0.72.1"
 

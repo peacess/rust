@@ -3,7 +3,6 @@ fn main() {
         .cpp(true)
         // .cpp_link_stdlib("stdc++")
         .warnings(false)
-        .static_flag(true)
         .static_crt(true)
         .flag("-static-libstdc++")
         // .flag("-C target-feature=+crt-static")

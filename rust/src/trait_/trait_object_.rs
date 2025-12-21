@@ -95,17 +95,17 @@ mod test {
             parent2.parent();
         }
 
-        {
-            //方法五，通过unsafe代码实现 -- sub --> parent
-            let parent2 = {
-                let (data, _) = unsafe { transmute::<_, (*mut (), *mut ())>(sub) };
-                #[allow(deref_nullptr)]
-                let (_, v) = unsafe { transmute::<_, (*mut (), *mut ())>(&*null::<MyStruct>() as &dyn Parent) };
-                unsafe { transmute::<_, &dyn Parent>((data, v)) } //直接组装一个trait object
-            };
-            println!("方法五，通过unsafe代码实现 -- sub --> parent: parent2.parent()");
-            parent2.parent();
-        }
+        // {
+        //     //方法五，通过unsafe代码实现 -- sub --> parent
+        //     let parent2 = {
+        //         let (data, _) = unsafe { transmute::<_, (*mut (), *mut ())>(sub) };
+        //         #[allow(deref_nullptr)]
+        //         let (_, v) = unsafe { transmute::<_, (*mut (), *mut ())>(&*null::<MyStruct>() as &dyn Parent) };
+        //         unsafe { transmute::<_, &dyn Parent>((data, v)) } //直接组装一个trait object
+        //     };
+        //     println!("方法五，通过unsafe代码实现 -- sub --> parent: parent2.parent()");
+        //     parent2.parent();
+        // }
         {
             //方法六，通过unsafe代码实现 -- trait object --> any
             let parent2 = {

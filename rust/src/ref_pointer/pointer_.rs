@@ -114,7 +114,7 @@ mod test {
         //返回为Box<&str>，与上面一样的问题
         //经过查找发现Cow正是解决这个问题的，下面是它的实现
         //
-        fn str6(s: &str) -> Cow<str> {
+        fn str6(s: &str) -> Cow<'_, str> {
             if s.contains(' ') {
                 let mut temp = String::with_capacity(s.len());
                 for c in s.chars() {

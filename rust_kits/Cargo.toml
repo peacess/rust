@@ -20,7 +20,7 @@ atomic_g = { package = "atomic",  version = "0.6.1" }
 parking_lot.workspace = true
 bytemuck = "1.24.0"
 walkdir = "2.5.0"
-clap = { version = "4.5.53", features = ["derive"] }
+clap = { version = "4.5.54", features = ["derive"] }
 # for generate ca self
 rcgen = { version = "0.14.6", features = ["pem", "x509-parser","aws_lc_rs"] }
 pem = "3.0.6"
